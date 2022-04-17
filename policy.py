@@ -21,3 +21,9 @@ class Policy(object):
             action
         """
         raise NotImplementedError()
+
+    def print_all(self):
+        """
+        print all the action prob
+        """
+        raise NotImplementedError()

@@ -2,11 +2,6 @@ import numpy as np
 
 
 class Env(object):
-    def __init__(self):
-
-    @property
-    def spec(self) -> EnvSpec:
-        return self._env_spec
 
     def reset(self) -> int:
         """

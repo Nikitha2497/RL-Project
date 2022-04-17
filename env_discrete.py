@@ -15,9 +15,11 @@ class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
 
         self.start_state = 9
         self._nA = 4
+        self._nS = 49
         self._state = self.start_state
         self.m = 7
         self.n = 7
+        self.final_state = 30
 
         
 
@@ -25,6 +27,11 @@ class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
     def nA(self) -> int:
         """ # possible actions """
         return self._nA
+
+    @property
+    def nS(self) -> int:
+        """ # possible states """
+        return self._nS
 
     def reset(self):
         self._state = self.start_state
@@ -37,24 +44,24 @@ class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
         prev_state = self._state
         choice = np.random.choice(4)
 
-        row = prev_state/self.m 
-        col = prev_state%(self.m)
+        row = int(prev_state / self.m)
+        col = int(prev_state)%(self.m)
 
         if choice == 0:
             if row > 0:
                 row = row - 1
         elif choice == 1:
-            if col < n - 1:
+            if col < self.n - 1:
                 col = col + 1
 
         elif choice == 2:
-            if row < m -1:
+            if row < self.m -1:
                 row = row + 1
         else:
             if col > 0:
                 col = col - 1;
 
-        self._state = row*m + col
+        self._state = row*self.m + col
 
         if self.state_matrix[row][col] == -1:
             return self._state, -2, True, False 

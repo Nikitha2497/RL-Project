@@ -1,30 +1,28 @@
 import numpy as np
 import math
 from policy import Policy
+from typing import Tuple
 
 #This is for discrete state and action space
 
 def QLearning(
     env, 
-    gamma:float, # discount factor
-    alpha:float, # step size
+    gamma:float, 
+    alpha:float, 
     num_episode:int,
     eta: float,
-    epsilon=.0,
-    initQ:np.array
-) -> Tuple[np.array,Policy]::
-	
-	Q = initQ
+    initQ:np.array,
+    epsilon=.0) -> Tuple[np.array,Policy]:
+    
+    Q = initQ
+    pi_star = GreedyPolicy(Q.shape[0])
 
-	pi_star = GreedyPolicy(Q.)
-
-	def epsilon_greedy_policy(s,done,w,epsilon=.0):
+    def epsilon_greedy_policy(s,done,epsilon=.0):
         nA = env.nA #TODO - Define the environment in this way
-
         if np.random.rand() < epsilon:
             return np.random.randint(nA)
         else:
-            return np.argmax(Q)
+            return np.argmax(Q[s])
 
 
     for i in range(0, num_episode):
@@ -32,21 +30,22 @@ def QLearning(
         done = False
        	 
         while True:
-            action = epsilon_greedy_policy(new_state, done, w, epsilon)
+            action = epsilon_greedy_policy(state, done, epsilon)
+
+            # print(action, "action")
             new_state, reward, done, goal = env.step(action)
 
             #This is the goal state
-			if done and goal:
-				Q[state][action] = Q[state][action] + alpha*(reward - Q[state][action])
-				break;
+            if done and goal:
+                Q[state][action] = Q[state][action] + alpha*(reward - Q[state][action])
+                break;
 
-			if done:
-				Q[state][action] = Q[state][action] + alpha*(reward + eta - Q[state][action])
-				break;
-			
-			Q[state][action] = Q[state][action] + alpha*(reward + min(Q[state]) - Q[state][action])
+            if done:
+                Q[state][action] = Q[state][action] + alpha*(reward + eta - Q[state][action])
+                break;
 
-			pi_star.set_action(state, np.argmax(Q[state]))
+            Q[state][action] = Q[state][action] + alpha*(reward + min(Q[state]) - Q[state][action])
+            pi_star.set_action(state, np.argmax(Q[state]))
 
             state = new_state
     
