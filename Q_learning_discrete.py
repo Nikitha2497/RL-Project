@@ -12,40 +12,47 @@ def QLearning(
     num_episode:int,
     eta: float,
     initQ:np.array,
-    epsilon=.0) -> Tuple[np.array,Policy]:
+    epsilon=.0,
+    epsilon_factor=100) -> Tuple[np.array,Policy]:
     
     Q = initQ
     pi_star = GreedyPolicy(Q.shape[0])
 
-    def epsilon_greedy_policy(s,done,epsilon=.0):
-        nA = env.nA #TODO - Define the environment in this way
+    def epsilon_greedy_policy(s,epsilon=.0):
+        nA = env.nA 
         if np.random.rand() < epsilon:
             return np.random.randint(nA)
         else:
-            return np.argmax(Q[s])
+            return np.argmin(Q[s])
 
 
     for i in range(0, num_episode):
         state = env.reset()
-        done = False
+
+        time_step = 0
        	 
         while True:
-            action = epsilon_greedy_policy(state, done, epsilon)
+            time_step += 1
+            alpha = 1./time_step
+            epsilon = 1./(epsilon_factor*time_step)
 
+
+            action = epsilon_greedy_policy(state, epsilon)
             # print(action, "action")
-            new_state, reward, done, goal = env.step(action)
+            new_state, cost, done, goal = env.step(action)
+            
 
             #This is the goal state
             if done and goal:
-                Q[state][action] = Q[state][action] + alpha*(reward - Q[state][action])
+                Q[state][action] = Q[state][action] + alpha*(cost - Q[state][action])
                 break;
 
             if done:
-                Q[state][action] = Q[state][action] + alpha*(reward + eta - Q[state][action])
+                Q[state][action] = Q[state][action] + alpha*(cost + eta - Q[state][action])
                 break;
 
-            Q[state][action] = Q[state][action] + alpha*(reward + min(Q[state]) - Q[state][action])
-            pi_star.set_action(state, np.argmax(Q[state]))
+            Q[state][action] = Q[state][action] + alpha*(cost + gamma*min(Q[new_state]) - Q[state][action])
+            pi_star.set_action(state, np.argmin(Q[state]))
 
             state = new_state
     
@@ -73,6 +80,19 @@ class GreedyPolicy(Policy):
 
     def print_all(self):
         for state in self.state_action_dict:
-            print("state " , state, " : " , self.state_action_dict[state])
+        	if self.state_action_dict[state] == 0:
+        		print("state " , int(state/7) , int(state%7), " : " , self.state_action_dict[state], "N")
 
+        	elif self.state_action_dict[state] == 1:
+        		print("state " , int(state/7) , int(state%7), " : " , self.state_action_dict[state], "W")
+
+        	elif self.state_action_dict[state] == 2:
+        		print("state " , int(state/7) , int(state%7), " : " , self.state_action_dict[state], "S")
+
+        	else:
+        		print("state " , int(state/7) , int(state%7), " : " , self.state_action_dict[state], "E")
+
+
+
+            
 

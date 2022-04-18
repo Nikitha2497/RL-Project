@@ -18,3 +18,13 @@ class Env(object):
             next state, reward, done (whether it reached to a terminal state), goal (whether it is the goal state or not)
         """
         raise NotImplementedError()
+
+    @property
+    def nA(self) -> int:
+        """ # possible actions """
+        raise NotImplementedError()
+
+    @property
+    def nS(self) -> int:
+        """ # possible states """
+        raise NotImplementedError()
