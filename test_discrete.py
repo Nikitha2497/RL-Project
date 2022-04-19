@@ -19,8 +19,8 @@ alpha = 0.1 #not using this, alpha is set to 1/t
 num_episode = 100000
 #eta = 100 - second path
 eta = 60
-epsilon = 0.01 #not using this, epsilon is set to 1/(epsilon_factor*t)
-epsilon_factor = 1
+epsilon = 0.1 #not using this, epsilon is set to 1/(epsilon_factor*t)
+epsilon_factor = 10
 
 max_num_steps = 100 #This is to check if there is a loop or not
 
@@ -47,9 +47,10 @@ for run in range(0, runs):
 	    epsilon,
 	    epsilon_factor)
 	
-	# eta = eta + 100
+	eta = eta + 200
 
-	# print(Q_star)
+	# for state in range(0,Q_star.shape[0]):
+	# 	print(state," : ",  Q_star[state])
 	print(Q_star[9])
 	pi_star.print_all()
 
@@ -70,13 +71,13 @@ for run in range(0, runs):
 	print("failure_prob", failure_prob, failed_runs)
 
 
-# #Plotting eta with failure probability
-# lists = sorted(failure_prob_with_eta.items())
+#Plotting eta with failure probability
+lists = sorted(failure_prob_with_eta.items())
 
-# x, y = zip(*lists)
+x, y = zip(*lists)
 
-# plt.plot(x, y)
-# plt.show()
+plt.plot(x, y)
+plt.show()
 
 
 

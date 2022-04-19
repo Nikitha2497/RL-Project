@@ -15,47 +15,66 @@ def QLearning(
     epsilon=.0,
     epsilon_factor=100) -> Tuple[np.array,Policy]:
     
-    Q = initQ
-    pi_star = GreedyPolicy(Q.shape[0])
+    Q1 = initQ
+    Q2 = initQ
+    pi_star = GreedyPolicy(Q1.shape[0])
 
     def epsilon_greedy_policy(s,epsilon=.0):
         nA = env.nA 
         if np.random.rand() < epsilon:
+            # print("taken a random action")
             return np.random.randint(nA)
         else:
-            return np.argmax(Q[s])
+            return np.argmax(Q1[s] + Q2[s])
 
-    time_step = 0
+    
     for i in range(0, num_episode):
         state = env.reset()
         # print("episode ", i , " start state: ",  state)    
-       	 
+        time_step = 0   	 
         while True:
             time_step += 1
-            alpha = 1./time_step
-            epsilon = 1./(epsilon_factor*time_step)
+            # alpha = 1./time_step
+            # epsilon = 1./(epsilon_factor*time_step)
 
-
+            # print("updated state", int(state/7) , int(state%7))
             action = epsilon_greedy_policy(state, epsilon)
            
             new_state, reward, done, goal = env.step(action)
-            
 
+            is_Q1 = False
+            if np.random.rand() < 0.5:
+                is_Q1 = True
+            
             #This is the goal state
             if done and goal:
-                Q[state][action] = Q[state][action] + alpha*(reward - Q[state][action])
+                if is_Q1:
+                    Q1[state][action] = Q1[state][action] + alpha*(reward - Q1[state][action])
+                else:
+                    Q2[state][action] = Q2[state][action] + alpha*(reward - Q2[state][action])
                 break;
 
             if done:
-                Q[state][action] = Q[state][action] + alpha*(reward - eta - Q[state][action])
+                if is_Q1:
+                    Q1[state][action] = Q1[state][action] + alpha*(reward - eta - Q1[state][action])
+                else:
+                    Q2[state][action] = Q2[state][action] + alpha*(reward - eta - Q2[state][action])
                 break;
 
-            Q[state][action] = Q[state][action] + alpha*(reward + gamma*max(Q[new_state]) - Q[state][action])
-            pi_star.set_action(state, np.argmax(Q[state]))
+            if is_Q1:
+                Q1[state][action] = Q1[state][action] + alpha*(reward + gamma*Q1[new_state, np.argmax(Q2[new_state])] - Q1[state][action])
+            else:
+                Q2[state][action] = Q2[state][action] + alpha*(reward + gamma*Q2[new_state, np.argmax(Q1[new_state])] - Q2[state][action])
+            # Q[state][action] = Q[state][action] + alpha*(reward + gamma*max(Q[new_state]) - Q[state][action])
+            
 
             state = new_state
+
+        for state in range(0,Q1.shape[0]):
+            pi_star.set_action(state, np.argmax(Q1[state]))
+            # print(int(state/7) , int(state%7)," : ",  Q1[state])
     
-    return Q, pi_star
+    return Q1, pi_star
 
 
 
