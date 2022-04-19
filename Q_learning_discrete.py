@@ -23,13 +23,12 @@ def QLearning(
         if np.random.rand() < epsilon:
             return np.random.randint(nA)
         else:
-            return np.argmin(Q[s])
+            return np.argmax(Q[s])
 
-
+    time_step = 0
     for i in range(0, num_episode):
         state = env.reset()
-
-        time_step = 0
+        # print("episode ", i , " start state: ",  state)    
        	 
         while True:
             time_step += 1
@@ -38,21 +37,21 @@ def QLearning(
 
 
             action = epsilon_greedy_policy(state, epsilon)
-            # print(action, "action")
-            new_state, cost, done, goal = env.step(action)
+           
+            new_state, reward, done, goal = env.step(action)
             
 
             #This is the goal state
             if done and goal:
-                Q[state][action] = Q[state][action] + alpha*(cost - Q[state][action])
+                Q[state][action] = Q[state][action] + alpha*(reward - Q[state][action])
                 break;
 
             if done:
-                Q[state][action] = Q[state][action] + alpha*(cost + eta - Q[state][action])
+                Q[state][action] = Q[state][action] + alpha*(reward - eta - Q[state][action])
                 break;
 
-            Q[state][action] = Q[state][action] + alpha*(cost + gamma*min(Q[new_state]) - Q[state][action])
-            pi_star.set_action(state, np.argmin(Q[state]))
+            Q[state][action] = Q[state][action] + alpha*(reward + gamma*max(Q[new_state]) - Q[state][action])
+            pi_star.set_action(state, np.argmax(Q[state]))
 
             state = new_state
     

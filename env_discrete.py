@@ -52,6 +52,16 @@ class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
         return self._nS
 
     def reset(self):
+        # state = np.random.choice(int(self.m*self.n))
+        # row = int(state / self.m)
+        # col = int(state)%(self.m)
+        
+        # while self.state_matrix[row][col] != 0:
+        #     state = np.random.choice(int(self.m*self.n))
+
+        #     row = int(state / self.m)
+        #     col = int(state)%(self.m)
+
         self._state = self.start_state
         return self._state
 
@@ -89,15 +99,15 @@ class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
         self._state = row*self.m + col
 
         dist = abs(row - self.final_state_i) + abs(col - self.final_state_j)
-        cost = self.lambda1 + self.lambda2*dist
+        reward = -1*self.lambda1 - self.lambda2*dist
 
         #This is the state for terminal state but not goal state
         if self.state_matrix[row][col] == -1:
-            return self._state, cost,  True, False 
+            return self._state, reward,  True, False 
 
         #This is the goal state
         elif self.state_matrix[row][col] == 1:
-            return self._state, cost, True, True 
+            return self._state, reward, True, True 
 
         #Remaining states
-        return self._state, cost, False, False
+        return self._state, reward, False, False
