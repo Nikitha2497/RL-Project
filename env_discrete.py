@@ -1,27 +1,58 @@
 import numpy as np
-
-
 from env import Env
 
 class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
 
     def __init__(self,lambda1, lambda2, primary_prob, secondary_prob):
-        self.state_matrix = np.array([[-1,-1,-1,-1,-1,-1,-1],
-                                       [-1,0,0,0,0,0,-1],
-                                       [-1,0,-1,-1,0,0,-1],
-                                       [-1,0,-1,-1,0,0,-1],
-                                       [-1,0,1,0,0,0,-1],
-                                       [-1,0,0,0,0,0,-1],
-                                       [-1,-1,-1,-1,-1,-1,-1]]) 
+#         self.state_matrix = np.array([[-1,-1,-1,-1,-1,-1,-1],
+#                                        [-1,0,0,0,0,0,-1],
+#                                        [-1,0,-1,-1,0,0,-1],
+#                                        [-1,0,-1,-1,0,0,-1],
+#                                        [-1,0,1,0,0,0,-1],
+#                                        [-1,0,0,0,0,0,-1],
+#                                        [-1,-1,-1,-1,-1,-1,-1]]) 
 
-        self.start_state = 9
+#         self.start_state = 9
+#         self._nA = 4
+#         self._nS = 49
+#         self._state = self.start_state
+#         self.m = 7
+#         self.n = 7
+#         self.final_state = 30
+        
+#         self.state_matrix = np.array([[-1, -1, -1, -1, -1, -1, -1, -1],
+#                                        [-1, 0, 0, 0, 0, 0, 0, -1],
+#                                        [-1, 0, -1, -1, 0, 0, 0, -1],
+#                                        [-1, 0, -1, -1, 0, 0, 0, -1],
+#                                        [-1, 0, 1, 0, 0, 0, 0, -1],
+#                                        [-1, 0, 0, 0, 0, 0, 0, -1],
+#                                        [-1, 0, 0, 0, 0, 0, 0, -1],
+#                                        [-1, -1, -1, -1, -1, -1, -1, -1]]) 
+
+#         self.start_state = 10
+#         self._nA = 4
+#         self._nS = 64
+#         self._state = self.start_state
+#         self.m = 8
+#         self.n = 8
+#         self.final_state = 34
+
+        self.state_matrix = np.array([[-1, -1, -1, -1, -1, -1, -1, -1],
+                                       [-1, 0, 0, 0, 0, 0, 0, -1],
+                                       [-1, 0, -1, -1, 0, 0, 0, -1],
+                                       [-1, 0, -1, -1, 0, 0, 0, -1],
+                                       [-1, 0, -1, -1, 0, 0, 0, -1],
+                                       [-1, 0, -1, -1, 0, 0, 0, -1],
+                                       [-1, 0, 1, 0, 0, 0, 0, -1],
+                                       [-1, -1, -1, -1, -1, -1, -1, -1]]) 
+
+        self.start_state = 10
         self._nA = 4
-        self._nS = 49
+        self._nS = 64
         self._state = self.start_state
-        self.m = 7
-        self.n = 7
-        self.final_state = 30
-
+        self.m = 8
+        self.n = 8
+        self.final_state = 50
 
         self.lambda1 = lambda1
         self.lambda2 = lambda2
@@ -29,8 +60,10 @@ class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
         self.final_state_j = int(self.final_state)%(self.m)
 
         self.prob_action = {}
-        #0 - North. 1 - West, 2 - South, 3 - East - Actions
-
+        #Actions
+        #0 - North. 1 - West, 2 - South, 3 - East 
+        
+        #States
         #0 - North, 1- NorthWest, 2 - West, 3- SouthWest, 4- South
         #5- SouthEast, 6- East, 7 - NorthEast
         self.prob_action[0] = [primary_prob, secondary_prob, 0, 0, 0, 0, 0 ,secondary_prob]
@@ -67,7 +100,7 @@ class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
 
     def step(self, action):
         assert action in list(range(self._nA)), "Invalid Action"
-        assert self._state != self.final_state, "Episode has ended!"
+#         assert self._state != self.final_state, "Episode has ended!"
 
         prev_state = self._state
 

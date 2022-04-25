@@ -1,9 +1,6 @@
 import numpy as np
-import math
 from policy import Policy
 from typing import Tuple
-
-#This is for discrete state and action space
 
 def QLearning(
     env, 
@@ -11,79 +8,78 @@ def QLearning(
     alpha:float, 
     num_episode:int,
     eta: float,
+    goal_reward: float,
     initQ:np.array,
-    epsilon=.0,
-    epsilon_factor=100) -> Tuple[np.array,Policy]:
+    epsilon=.0) -> Tuple[np.array, Policy, np.array, np.array, np.array, np.array, np.array]:
     
-    Q1 = initQ
-    Q2 = initQ
-    pi_star = GreedyPolicy(Q1.shape[0])
+    Q = initQ
+    pi_star = GreedyPolicy(Q.shape[0])
+    V_star_start = np.zeros(num_episode)
+    Q_W_start = np.zeros(num_episode)
+    Q_E_start = np.zeros(num_episode)
+    a_star_start = np.zeros(num_episode)
+    num_steps = np.zeros(num_episode)
 
     def epsilon_greedy_policy(s,epsilon=.0):
         nA = env.nA 
         if np.random.rand() < epsilon:
-            # print("taken a random action")
             return np.random.randint(nA)
         else:
-            return np.argmax(Q1[s] + Q2[s])
-
+            return np.argmax(Q[s])
+    
+    itr = 1; #to decay epsilon and alpha
     
     for i in range(0, num_episode):
         state = env.reset()
-        # print("episode ", i , " start state: ",  state)    
-        time_step = 0   	 
+        time_steps = 0
+        
+        if (i%(num_episode/100)==0):
+            epsilon = 1./(itr)
+            alpha = 1./(itr)
+            itr += 1
+#             print("epsilon=", epsilon)
+#             print("alpha=", alpha)
+#             print("i=", i)
+        
         while True:
-            time_step += 1
-            # alpha = 1./time_step
-            # epsilon = 1./(epsilon_factor*time_step)
-
-            # print("updated state", int(state/7) , int(state%7))
+            time_steps += 1
             action = epsilon_greedy_policy(state, epsilon)
-           
+            # print(action, "action")
+        
             new_state, reward, done, goal = env.step(action)
-
-            is_Q1 = False
-            if np.random.rand() < 0.5:
-                is_Q1 = True
             
             #This is the goal state
             if done and goal:
-                if is_Q1:
-                    Q1[state][action] = Q1[state][action] + alpha*(reward - Q1[state][action])
-                else:
-                    Q2[state][action] = Q2[state][action] + alpha*(reward - Q2[state][action])
+                Q[state][action] = Q[state][action] + alpha*(reward + goal_reward + gamma*max(Q[new_state]) - Q[state][action])
                 break;
-
-            if done:
-                if is_Q1:
-                    Q1[state][action] = Q1[state][action] + alpha*(reward - eta - Q1[state][action])
-                else:
-                    Q2[state][action] = Q2[state][action] + alpha*(reward - eta - Q2[state][action])
+                
+            #this is an unsafe state
+            elif done:
+                Q[state][action] = Q[state][action] + alpha*(reward - eta + gamma*max(Q[new_state]) - Q[state][action])
                 break;
-
-            if is_Q1:
-                Q1[state][action] = Q1[state][action] + alpha*(reward + gamma*Q1[new_state, np.argmax(Q2[new_state])] - Q1[state][action])
-            else:
-                Q2[state][action] = Q2[state][action] + alpha*(reward + gamma*Q2[new_state, np.argmax(Q1[new_state])] - Q2[state][action])
-            # Q[state][action] = Q[state][action] + alpha*(reward + gamma*max(Q[new_state]) - Q[state][action])
             
-
-            state = new_state
-
-        for state in range(0,Q1.shape[0]):
-            pi_star.set_action(state, np.argmax(Q1[state]))
-            # print(int(state/7) , int(state%7)," : ",  Q1[state])
+            #this is a safe state that is not a goal state
+            else:
+                Q[state][action] = Q[state][action] + alpha*(reward + gamma*max(Q[new_state]) - Q[state][action])
+                state = new_state
+        
+        V_star_start[i] = np.max(Q[env.reset()])
+        Q_W_start[i] = Q[env.reset()][1]
+        Q_E_start[i] = Q[env.reset()][3]
+        a_star_start[i] = np.argmax(Q[env.reset()])
+        num_steps[i] = time_steps
+        
+    for state in range(0, Q.shape[0]):
+        pi_star.set_action(state, np.argmax(Q[state]))
     
-    return Q1, pi_star
-
-
+    return Q, pi_star, V_star_start, Q_W_start, Q_E_start, a_star_start, num_steps
 
 class GreedyPolicy(Policy):
 
     def __init__(self, states:int):
         self.state_action_dict = {};
         for state in range(0,states):
-            self.state_action_dict[state] = 0;
+            self.state_action_dict[state] = 1;
 
     def set_action(self,state:int, action:int):
         self.state_action_dict[state] = action;
@@ -99,18 +95,13 @@ class GreedyPolicy(Policy):
     def print_all(self):
         for state in self.state_action_dict:
         	if self.state_action_dict[state] == 0:
-        		print("state " , int(state/7) , int(state%7), " : " , self.state_action_dict[state], "N")
+        		print("state " , int(state/8) , int(state%8), " : " , self.state_action_dict[state], "N")
 
         	elif self.state_action_dict[state] == 1:
-        		print("state " , int(state/7) , int(state%7), " : " , self.state_action_dict[state], "W")
+        		print("state " , int(state/8) , int(state%8), " : " , self.state_action_dict[state], "W")
 
         	elif self.state_action_dict[state] == 2:
-        		print("state " , int(state/7) , int(state%7), " : " , self.state_action_dict[state], "S")
+        		print("state " , int(state/8) , int(state%8), " : " , self.state_action_dict[state], "S")
 
         	else:
-        		print("state " , int(state/7) , int(state%7), " : " , self.state_action_dict[state], "E")
-
-
-
-            
-
+        		print("state " , int(state/8) , int(state%8), " : " , self.state_action_dict[state], "E")
