@@ -29,13 +29,15 @@ def Simulate_TD(env: Env,
 				 num_episode: int,
 				 gamma: int,
 				 alpha: int,
-				 start_state:int) -> float:
+				 start_state:int,
+				 max_num_steps: int) -> float:
 	V = np.zeros(env._nS)
 
 	for episode in range(0, num_episode):
 		state = env.reset()
 		steps = 0
 		while True:
+			steps += 1
 			action = policy.action(state)
 
 			new_state, cost, done, goal = env.step(action)
@@ -50,6 +52,10 @@ def Simulate_TD(env: Env,
 
 			V[state] = V[state] + alpha*(gamma*V[new_state] - V[state])
 
+			if steps ==  max_num_steps:
+				V[state] = V[state] + alpha*(1 - V[state])
+				print("Looks like this policy is looping")
+				break
 
 			state = new_state
 
