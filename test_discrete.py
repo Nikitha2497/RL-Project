@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from env_discrete import DiscreteEnv
 from Q_learning_discrete import QLearning
 from simulate import Simulate_MC
@@ -32,7 +33,7 @@ env = DiscreteEnv(lambda1, lambda2, primary_prob, state_matrix)
 #endregion
 
 goal_reward = 5; #terminal reward
-eta = 5
+eta = 10
 
 gamma = 1
 alpha = 0.5 #not using this, alpha is set to 1/itr
@@ -47,6 +48,11 @@ runs = 100
 failure_prob_with_eta = {}
 
 num_episode_simulated = 1000
+
+
+#create a results folder if one doesn't exist to store the plot figures
+if not os.path.exists('results'):
+	os.makedirs('results')
 
 
 for run in range(0, runs):
