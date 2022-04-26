@@ -3,61 +3,26 @@ from env import Env
 
 class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
 
-    def __init__(self,lambda1, lambda2, primary_prob, secondary_prob):
-#         self.state_matrix = np.array([[-1,-1,-1,-1,-1,-1,-1],
-#                                        [-1,0,0,0,0,0,-1],
-#                                        [-1,0,-1,-1,0,0,-1],
-#                                        [-1,0,-1,-1,0,0,-1],
-#                                        [-1,0,1,0,0,0,-1],
-#                                        [-1,0,0,0,0,0,-1],
-#                                        [-1,-1,-1,-1,-1,-1,-1]]) 
+    def __init__(self,lambda1, lambda2, 
+        primary_prob, 
+        state_matrix):
 
-#         self.start_state = 9
-#         self._nA = 4
-#         self._nS = 49
-#         self._state = self.start_state
-#         self.m = 7
-#         self.n = 7
-#         self.final_state = 30
-        
-#         self.state_matrix = np.array([[-1, -1, -1, -1, -1, -1, -1, -1],
-#                                        [-1, 0, 0, 0, 0, 0, 0, -1],
-#                                        [-1, 0, -1, -1, 0, 0, 0, -1],
-#                                        [-1, 0, -1, -1, 0, 0, 0, -1],
-#                                        [-1, 0, 1, 0, 0, 0, 0, -1],
-#                                        [-1, 0, 0, 0, 0, 0, 0, -1],
-#                                        [-1, 0, 0, 0, 0, 0, 0, -1],
-#                                        [-1, -1, -1, -1, -1, -1, -1, -1]]) 
+        self.state_matrix = state_matrix
 
-#         self.start_state = 10
-#         self._nA = 4
-#         self._nS = 64
-#         self._state = self.start_state
-#         self.m = 8
-#         self.n = 8
-#         self.final_state = 34
+        self.m = self.state_matrix.shape[0]
+        self.n = self.state_matrix.shape[1]
 
-        self.state_matrix = np.array([[-1, -1, -1, -1, -1, -1, -1, -1],
-                                       [-1, 0, 0, 0, 0, 0, 0, -1],
-                                       [-1, 0, -1, -1, 0, 0, 0, -1],
-                                       [-1, 0, -1, -1, 0, 0, 0, -1],
-                                       [-1, 0, -1, -1, 0, 0, 0, -1],
-                                       [-1, 0, -1, -1, 0, 0, 0, -1],
-                                       [-1, 0, 1, 0, 0, 0, 0, -1],
-                                       [-1, -1, -1, -1, -1, -1, -1, -1]]) 
+        self.__init_states()
 
-        self.start_state = 10
+        #Number of actions are always 4 for the discrete env
         self._nA = 4
-        self._nS = 64
+        self._nS = self.m*self.n
+
+
         self._state = self.start_state
-        self.m = 8
-        self.n = 8
-        self.final_state = 50
 
         self.lambda1 = lambda1
         self.lambda2 = lambda2
-        self.final_state_i = int (self.final_state/self.m)
-        self.final_state_j = int(self.final_state)%(self.m)
 
         self.prob_action = {}
         #Actions
@@ -66,6 +31,9 @@ class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
         #States
         #0 - North, 1- NorthWest, 2 - West, 3- SouthWest, 4- South
         #5- SouthEast, 6- East, 7 - NorthEast
+
+        secondary_prob = (1 - primary_prob)/2
+
         self.prob_action[0] = [primary_prob, secondary_prob, 0, 0, 0, 0, 0 ,secondary_prob]
 
         self.prob_action[1] = [0, secondary_prob, primary_prob, secondary_prob, 0, 0, 0, 0]
@@ -73,6 +41,17 @@ class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
         self.prob_action[2] = [0, 0, 0, secondary_prob, primary_prob, secondary_prob, 0, 0]
 
         self.prob_action[3] = [0, 0, 0, 0, 0, secondary_prob, primary_prob, secondary_prob]
+
+    def __init_states(self):
+        for i in range(0,self.m):
+            for j in range(0,self.n):
+                if self.state_matrix[i][j] == 2:
+                    self.start_state = i*self.n + j
+                elif self.state_matrix[i][j] == 1:
+                    self.final_state = i*self.n + j 
+                    self.final_state_i = i
+                    self.final_state_j = j
+
     
     @property
     def nA(self) -> int:
@@ -83,6 +62,18 @@ class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
     def nS(self) -> int:
         """ # possible states """
         return self._nS
+
+    @property
+    def nS_rows(self) -> int:
+        """ # possible states """
+        return self.m
+
+    @property
+    def nS_columns(self) -> int:
+        """ # possible states """
+        return self.n
+
+
 
     def reset(self):
         # state = np.random.choice(int(self.m*self.n))
@@ -106,8 +97,8 @@ class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
 
         choice = np.random.choice(8, 1, p=self.prob_action[action])
 
-        row = int(prev_state / self.m)
-        col = int(prev_state)%(self.m)
+        row = int(prev_state / self.n)
+        col = int(prev_state)%(self.n)
 
         #North or North West or North East
         if choice == 0 or choice == 1 or choice == 7:

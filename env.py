@@ -28,3 +28,13 @@ class Env(object):
     def nS(self) -> int:
         """ # possible states """
         raise NotImplementedError()
+
+    @property
+    def nS_rows(self) -> int:
+        """ # possible rows only for discrete env """
+        raise NotImplementedError()
+
+    @property
+    def nS_columns(self) -> int:
+        """ # possible rows only for discrete env """
+        raise NotImplementedError()
