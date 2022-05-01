@@ -1,6 +1,7 @@
 import numpy as np
 from env import Env
 
+
 class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
 
     def __init__(self,lambda1, lambda2, 

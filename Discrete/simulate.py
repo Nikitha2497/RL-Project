@@ -3,6 +3,8 @@ import numpy as np
 from env import Env 
 from policy import Policy
 
+import matplotlib.pylab as plt
+
 def Simulate_MC(env: Env, policy: Policy, max_num_steps:int) -> int:
 	steps = 0
 	state = env.reset()
@@ -30,12 +32,24 @@ def Simulate_TD(env: Env,
 				 gamma: int,
 				 alpha: int,
 				 start_state:int,
-				 max_num_steps: int) -> float:
+				 max_num_steps: int,
+				 run:int) -> float:
 	V = np.zeros(env._nS)
+
+	v_star = np.zeros(num_episode)
+
+	itr = 1; #to decay epsilon and alpha
+
 
 	for episode in range(0, num_episode):
 		state = env.reset()
 		steps = 0
+
+		if (episode%(num_episode/100)==0):
+			epsilon = 1./(itr)
+			alpha = 1./(itr)
+			itr += 1
+
 		while True:
 			steps += 1
 			action = policy.action(state)
@@ -58,6 +72,14 @@ def Simulate_TD(env: Env,
 				break
 
 			state = new_state
+
+		v_star[episode] = V[start_state]
+
+	plt.plot(v_star)
+	plt.ylabel('V star TD')
+	plt.savefig('results/TD_convergence_' + str(run) + '.png')
+	plt.close()
+	plt.clf()
 
 	return V[start_state]
 

@@ -25,6 +25,7 @@ def QLearning(
     a_star_start = np.zeros(num_episode)
     num_steps = np.zeros(num_episode)
 
+    V_star = np.zeros(Q.shape[0])
 
     metric = Metric(num_episode)
 

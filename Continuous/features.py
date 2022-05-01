@@ -1,5 +1,4 @@
 
-
 #Base class for state action feature vector
 class StateActionFeatureVector():
     def __init__(self,

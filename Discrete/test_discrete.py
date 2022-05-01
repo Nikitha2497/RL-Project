@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../')
+
 import numpy as np
 import os
 from env_discrete import DiscreteEnv
@@ -7,6 +10,8 @@ from simulate import Simulate_MC
 from simulate import Simulate_TD
 
 import matplotlib.pylab as plt
+from mpl_toolkits.mplot3d import Axes3D 
+from matplotlib import colors
 
 from metric import Metric
 
@@ -41,13 +46,13 @@ num_episode = 100000
 epsilon = 0.1 #not using this, epsilon is set to 1/itr
 
 max_num_steps = 100 #This is to check if there is a loop or not
-runs = 100
+runs = 1
 #max_simulated_runs = 100
 ######################################################################################
 
 failure_prob_with_eta = {}
 
-num_episode_simulated = 1000
+num_episode_simulated = 10000
 
 
 #create a results folder if one doesn't exist to store the plot figures
@@ -71,6 +76,11 @@ for run in range(0, runs):
 
 	eta = eta + 5
 	
+	V = np.zeros(Q_star.shape[0])
+
+	for state in range(0, Q_star.shape[0]):
+		V[state] = max(Q_star[state])
+
 	# print(Q_star[env.reset()])
 	# pi_star.print_all()
 	plt.figure(1 + run)
@@ -89,8 +99,38 @@ for run in range(0, runs):
 	plt.legend(loc="upper right")
 	plt.ylabel('Q (W, E)')
 	plt.savefig('results/run_' + str(run) +  '_q_star.png')
+	
+
+
+	#Plot the surface plot for V
+	fig = plt.figure()
+	ax = fig.add_subplot(111, projection='3d')
+	x =  np.arange(0, state_matrix.shape[0] - 1, 1)
+	y =  np.arange(0, state_matrix.shape[1] - 1, 1)
+	X, Y = np.meshgrid(x, y)
+	zs = np.array(V[np.ravel(X)*state_matrix.shape[1] + np.ravel(Y)])
+	Z = zs.reshape(X.shape)
+
+	ax.plot_surface(X, Y, Z)
+
+	ax.set_xlabel('X')
+	ax.set_ylabel('Y')
+	ax.set_zlabel('V_star')
+
+	plt.savefig('results/run_' + str(run) +  '_v.png')
 	plt.clf()
 	plt.close()
+	
+	#TODO - Plot the policy graph
+	
+	# fig, ax = plt.subplots()
+	# ax.imshow(data, cmap=cmap, norm=norm)
+
+	# # draw gridlines
+	# ax.grid(which='major', axis='both', linestyle='-', color='k', linewidth=2)
+	# ax.set_xticks(np.arange(-.5, 10, 1));
+	# ax.set_yticks(np.arange(-.5, 10, 1));
+
 # 	plt.figure(4)
 # 	plt.plot(num_steps)
 # 	plt.ylabel('num steps')
@@ -109,7 +149,7 @@ for run in range(0, runs):
 
 # 	failure_prob = failed_runs/max_simulated_runs
 
-	failure_prob = Simulate_TD(env, pi_star, num_episode_simulated, gamma, alpha, start_state, max_num_steps)
+	failure_prob = Simulate_TD(env, pi_star, num_episode_simulated, gamma, alpha, start_state, max_num_steps, run)
 
 	failure_prob_with_eta[eta] = failure_prob
 
