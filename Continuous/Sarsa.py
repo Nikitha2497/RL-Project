@@ -17,19 +17,17 @@ def Sarsa(
     num_episode:int,
     eta: float,
     goal_reward: float,
-    epsilon=.0
+    epsilon=0.01
 ) -> Tuple[np.array, Policy]:
     """
     Implement True online Sarsa(\lambda)
     """
     w = np.zeros((X.feature_vector_len()))
 
-    epsilon = 0.
-
-    def epsilon_greedy_policy(s,done,w,epsilon=.0):
+    def epsilon_greedy_policy(s,w,epsilon=.0):
         nA = env.nA 
         #print(len(w))
-        Q = [np.dot(w, X(s,done,a)) for a in range(nA)]
+        Q = [np.dot(w, X(s,a)) for a in range(nA)]
 
         if np.random.rand() < epsilon:
             return np.random.randint(nA)
@@ -38,65 +36,57 @@ def Sarsa(
 
 
     for i in range(0, num_episode):
-        #print(i)
         state = env.reset()
-        done = False
-        action = epsilon_greedy_policy(state, done, w, epsilon)
+        action = epsilon_greedy_policy(state, w, epsilon)
 
-        x = X.__call__(state, done, action) #features
-
-        old_val = 0.
+        x = X(state, action) #features
 
         while True:
             new_state, reward, done, goal = env.step(action)
 
-            action = epsilon_greedy_policy(new_state, done, w, epsilon)
+            new_action = epsilon_greedy_policy(new_state, w, epsilon)
 
-            new_x = X.__call__(new_state, done, action)
+            new_x = X(new_state, new_action)
 
             val = np.dot(w, x)
 
             new_val = np.dot(w, new_x)
 
             if done and goal:
-                delta = reward + goal_reward + gamma*new_val - val
+                delta = reward + goal_reward - val
             elif done:
-                delta = reward - eta + gamma*new_val - val
+                delta = reward - eta - val
             else:
                 delta = reward + gamma*new_val - val
 
             w = w + alpha*delta*x
 
-            old_val = new_val
-
             x = new_x
+            action = new_action
 
             if done:
                 break
 
-    pi_star = GreedyPolicy(env, w, X)
+    pi_star = GreedyPolicy(env.nA, w, X)
 
     return w, pi_star
 
 
 class GreedyPolicy(Policy):
 
-    def __init__(self, env: Env, w:np.array, X:StateActionFeatureVector):
-        self.env = env
-        self.nA = env.nA
+    def __init__(self, nA: int, w:np.array, X:StateActionFeatureVector):
+        self.nA = nA
         self.w = w
         self.X = X
 
     def action_prob(self,state,action:int):
-        done = self.env(state)
-        Q = [np.dot(self.w, self.X(state,done,a)) for a in range(self.nA)]
+        Q = [np.dot(self.w, self.X(state,a)) for a in range(self.nA)]
         if action == np.argmax(Q):
             return 1.0
         return 0.0;
 
     def action(self,state):
-        done = self.env.is_terminal(state)
-        Q = [np.dot(self.w, self.X(state,done,a)) for a in range(self.nA)]
+        Q = [np.dot(self.w, self.X(state,a)) for a in range(self.nA)]
         return np.argmax(Q)
             
 

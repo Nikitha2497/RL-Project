@@ -46,7 +46,7 @@ env = ContinuousEnv(lambda1,
 
 
 goal_reward = 5; #terminal reward
-eta = 10
+eta = 5
 
 
 gamma = 1
@@ -82,7 +82,7 @@ for run in range(0,runs):
     print(w_star)
     print(pi_star)
 
-    eta = eta+5
+    # eta = eta+5
 
     failure_prob = Simulate_Semigradient_TD(env, 
         pi_star,

@@ -28,22 +28,19 @@ class StateActionFeatureVectorWithPoly(StateActionFeatureVector):
         return self.dimension
 
    
-    def __call__(self, s, done, a) -> np.array:
+    def __call__(self, s, a) -> np.array:
     
         """
         implement function x: S+ x A -> [0,1]^d
-        if done is True, then return 0^d
         """
         ret_array = np.zeros(self.dimension)
-        
-        if done:
-            return ret_array
 
-        
-        ret_array[a] = 1
-        ret_array[a+1] = s[0]
-        ret_array[a+2] = s[1]
-        ret_array[a+3] = s[0]*s[1]
+        offset = a*self.num_actions
+
+        ret_array[offset] = 1
+        ret_array[offset+1] = s[0]
+        ret_array[offset+2] = s[1]
+        ret_array[offset+3] = s[0]*s[1]
 
         return ret_array
 
@@ -54,23 +51,18 @@ class StateActionFeatureVectorWithPoly(StateActionFeatureVector):
 
 class StateFeatureVectorWithPoly(StateFeatureVector):
     def __init__(self):
-
         self.dimension = 4
 
     def feature_vector_len(self) -> int:
         return self.dimension
 
    
-    def __call__(self, s, done) -> np.array:
+    def __call__(self, s) -> np.array:
     
         """
         implement function x: S+ x A -> [0,1]^d
-        if done is True, then return 0^d
         """
         ret_array = np.zeros(self.dimension)
-        
-        if done:
-            return ret_array
 
         
         ret_array[0] = 1

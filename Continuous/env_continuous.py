@@ -75,36 +75,20 @@ class ContinuousEnv(Env):
 
 		reward = -1*self.lambda1
 
+		#Not inside the boundary
 		if not self.boundary.is_in(new_x, new_y):
 			return self._state, reward,  True, False 
 
+		#If the point is inside the red regions
 		for region in self.not_safe_regions:
 			if region.is_in(new_x, new_y):
 				return self._state, reward, True, False
 
-
+		#If the point in the goal region
 		if self.goal.is_in(new_x, new_y):
 			return self._state, reward, True, True
 
 		return self._state, reward, False, False
-
-	def is_terminal(self, state) -> bool:
-
-		x = state[0]
-		y = state[1]
-
-		if not self.boundary.is_in(x, y):
-			return True
-		for region in self.not_safe_regions:
-			if region.is_in(x, y):
-				return True
-
-
-		if self.goal.is_in(x, y):
-			return True
-
-
-		return False
 
 		
 

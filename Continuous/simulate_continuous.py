@@ -16,41 +16,37 @@ def Simulate_Semigradient_TD(env: Env,
 
 	for i in range(0, num_episode):
 		state = env.reset()
-		done = False
-		action = policy.action(state)
-
-		x = X(state, done) #features
-
-		old_val = 0.
 
 		while True:
+			# print("I am here")
+			action = policy.action(state)
+			x = X(state) #features
+			
 			new_state, reward, done, goal = env.step(action)
-
-			action = policy.action(new_state)
-
-			new_x = X(new_state, done)
+			
+			new_x = X(new_state)
 
 			val = np.dot(w, x)
 
 			new_val = np.dot(w, new_x)
 
 			if done and goal:
-				delta = gamma*new_val - val
+				delta =  - val
 			elif done:
-				delta = 1 + gamma*new_val - val
+				delta = 1 - val
 			else:
 				delta = gamma*new_val - val
 
 			w = w + alpha*delta*x
 
-			old_val = new_val
-
 			x = new_x
+			state = new_state
 
 			if done:
 				break
 
-	v_start_state = np.dot(X(env.reset(), False), w)
+
+	v_start_state = np.dot(X(env.reset()), w)
 	return v_start_state
 
 
