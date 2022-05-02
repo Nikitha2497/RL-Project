@@ -21,10 +21,10 @@ from simulate_continuous import Simulate_Semigradient_TD
 lambda1 = 1 #control cost
 
 
-noise_std =  0.1 #Noise standard deviation,
+noise_std =  0 #Noise standard deviation,
 noise_mean = 0 #Noise mean
-beta1 =  1 #step size in horizontal direction
-beta2 = 1 #step size in vertical direction
+beta1 =  0.01 #step size in horizontal direction
+beta2 = 0.01 #step size in vertical direction
 boundary =  Rectangle(0,0,0.7,0.7)
 not_safe_regions = [] #List of non safe Rectangles
 not_safe_regions.append(Rectangle(0.1,0.1,0.3,0.5))
@@ -46,7 +46,7 @@ env = ContinuousEnv(lambda1,
 
 
 goal_reward = 5; #terminal reward
-eta = 5
+eta = 100
 
 
 gamma = 1
@@ -58,7 +58,7 @@ runs = 1
 
 failure_prob_with_eta = {}
 
-num_episode_simulated = 10000
+num_episode_simulated = 100000
 
 nA = 4
 X_state_action = StateActionFeatureVectorWithPoly(4)

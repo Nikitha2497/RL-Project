@@ -16,13 +16,15 @@ def Simulate_Semigradient_TD(env: Env,
 
 	for i in range(0, num_episode):
 		state = env.reset()
-
+		# print(i)
 		while True:
 			# print("I am here")
 			action = policy.action(state)
+			# print("current state ", state, action)
 			x = X(state) #features
 			
 			new_state, reward, done, goal = env.step(action)
+			# print("new state", new_state, reward, done, goal)
 			
 			new_x = X(new_state)
 
@@ -45,8 +47,11 @@ def Simulate_Semigradient_TD(env: Env,
 			if done:
 				break
 
+	print("inside simulate")
+	print(w)
+	print(X(env.reset()))
+	v_start_state = np.dot(w, X(env.reset()))
 
-	v_start_state = np.dot(X(env.reset()), w)
 	return v_start_state
 
 

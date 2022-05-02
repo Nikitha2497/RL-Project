@@ -53,23 +53,27 @@ class ContinuousEnv(Env):
 	def step(self, action):
 		assert action in list(range(self._nA)), "Invalid Action"
 
-		new_x = self._state[0] + np.random.normal(self.noise_mean, self.noise_std)
-		new_y = self._state[1] + np.random.normal(self.noise_mean, self.noise_std)
+		new_x = self._state[0]
+		new_y = self._state[1]
 
 		#Actions
 		#0 - North. 1 - West, 2 - South, 3 - East 
 		
 		if action == 0:
 			new_y += self.beta2
+			new_x += np.random.normal(self.noise_mean, self.noise_std)
 
 		elif action == 1:
 			new_x -= self.beta1
+			new_y += np.random.normal(self.noise_mean, self.noise_std)
 
 		elif action == 2:
 			new_y -= self.beta2
+			new_x += np.random.normal(self.noise_mean, self.noise_std)
 
 		else:
 			new_x += self.beta1
+			new_y += np.random.normal(self.noise_mean, self.noise_std)
 
 		self._state = tuple((new_x, new_y))
 

@@ -36,6 +36,7 @@ def Sarsa(
 
 
     for i in range(0, num_episode):
+        # print("Sarsa " + str(i))
         state = env.reset()
         action = epsilon_greedy_policy(state, w, epsilon)
 
@@ -87,6 +88,7 @@ class GreedyPolicy(Policy):
 
     def action(self,state):
         Q = [np.dot(self.w, self.X(state,a)) for a in range(self.nA)]
+        # print("THIS STATE " , state, Q, np.argmax(Q))
         return np.argmax(Q)
             
 
