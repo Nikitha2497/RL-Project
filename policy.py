@@ -4,7 +4,7 @@ import numpy as np
 #This represents the base class of a policy
 
 class Policy(object):
-    def action_prob(self,state:int,action:int) -> float:
+    def action_prob(self,state,action:int) -> float:
         """
         input:
             state, action
@@ -13,7 +13,7 @@ class Policy(object):
         """
         raise NotImplementedError()
 
-    def action(self,state:int) -> int:
+    def action(self,state) -> int:
         """
         input:
             state

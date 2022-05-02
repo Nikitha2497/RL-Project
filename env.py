@@ -38,3 +38,7 @@ class Env(object):
     def nS_columns(self) -> int:
         """ # possible rows only for discrete env """
         raise NotImplementedError()
+
+    def is_terminal(self, state) -> bool:
+        """" returns if the state is terminal or not"""
+        raise NotImplementedError()

@@ -92,7 +92,7 @@ class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
 
     def step(self, action):
         assert action in list(range(self._nA)), "Invalid Action"
-#         assert self._state != self.final_state, "Episode has ended!"
+        assert self._state != self.final_state, "Episode has ended!"
 
         prev_state = self._state
 
