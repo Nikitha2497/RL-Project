@@ -1,15 +1,11 @@
 #This implements the polynomial feature extraction
 
 from features import StateActionFeatureVector
-
 from features import StateFeatureVector
-
 import numpy as np
-
 
 #State is of the form(s1, s2) and the features for each action are [1, s1, s2, s1s2]
 #We have used the similar interface from the assignment.
-
 class StateActionFeatureVectorWithPoly(StateActionFeatureVector):
     def __init__(self,
                  num_actions:int):
@@ -31,7 +27,7 @@ class StateActionFeatureVectorWithPoly(StateActionFeatureVector):
     def __call__(self, s, a) -> np.array:
     
         """
-        implement function x: S+ x A -> [0,1]^d
+        implement function x: S x A -> R
         """
         ret_array = np.zeros(self.dimension)
 
@@ -47,8 +43,6 @@ class StateActionFeatureVectorWithPoly(StateActionFeatureVector):
 
 #State is of the form(s1, s2) and the features for each state are [1, s1, s2, s1s2]
 #We have used the similar interface from the assignment.
-
-
 class StateFeatureVectorWithPoly(StateFeatureVector):
     def __init__(self):
         self.dimension = 4
@@ -56,15 +50,13 @@ class StateFeatureVectorWithPoly(StateFeatureVector):
     def feature_vector_len(self) -> int:
         return self.dimension
 
-   
     def __call__(self, s) -> np.array:
     
         """
-        implement function x: S+ x A -> [0,1]^d
+        implement function x: S -> R
         """
         ret_array = np.zeros(self.dimension)
 
-        
         ret_array[0] = 1
         ret_array[1] = s[0]
         ret_array[2] = s[1]

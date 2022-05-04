@@ -1,20 +1,17 @@
 import numpy as np
 from env import Env
-
 from typing import Tuple
-
 from region import Rectangle
 
 #This is continuous space and discrete action space env
-
 #There is no state cost in this
 
 class ContinuousEnv(Env):
 	def __init__(self, lambda1,
-		noise_std:float, #Noise standard deviation,
+		noise_std: float, #Noise standard deviation,
 		noise_mean: float, #Noise mean
-		beta1:float, #step size in horizontal direction
-		beta2:float, #step size in vertical direction
+		beta1: float, #step size in horizontal direction
+		beta2: float, #step size in vertical direction
 		boundary: Rectangle,
 		not_safe_regions, #List of Rectangles
 		goal: Rectangle,
@@ -40,7 +37,6 @@ class ContinuousEnv(Env):
 		#Number of actions are always 4 for the discrete action space
 		self._nA = 4
 
-
 	@property
 	def nA(self) -> int:
 		""" # possible actions """
@@ -60,19 +56,19 @@ class ContinuousEnv(Env):
 		#0 - North. 1 - West, 2 - South, 3 - East 
 		
 		if action == 0:
-			new_y += self.beta2
+			new_y += self.beta2 + np.random.normal(self.noise_mean, self.noise_std)
 			new_x += np.random.normal(self.noise_mean, self.noise_std)
 
 		elif action == 1:
-			new_x -= self.beta1
+			new_x -= self.beta1 + np.random.normal(self.noise_mean, self.noise_std)
 			new_y += np.random.normal(self.noise_mean, self.noise_std)
 
 		elif action == 2:
-			new_y -= self.beta2
+			new_y -= self.beta2 + np.random.normal(self.noise_mean, self.noise_std)
 			new_x += np.random.normal(self.noise_mean, self.noise_std)
 
 		else:
-			new_x += self.beta1
+			new_x += self.beta1 + np.random.normal(self.noise_mean, self.noise_std)
 			new_y += np.random.normal(self.noise_mean, self.noise_std)
 
 		self._state = tuple((new_x, new_y))

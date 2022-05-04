@@ -1,5 +1,4 @@
 import numpy as np
-
 from env import Env 
 from policy import Policy
 
@@ -13,10 +12,15 @@ def Simulate_Semigradient_TD(env: Env,
 	alpha:float) -> float: # step size
 
 	w = np.zeros((X.feature_vector_len()))
-
+    
+	itr = 1; #to decay epsilon and alpha
 	for i in range(0, num_episode):
 		state = env.reset()
 		# print(i)
+		if (i%(num_episode/100)==0):
+			epsilon = 1./(itr)
+			alpha = 1./(itr)
+			itr += 1
 		while True:
 			# print("I am here")
 			action = policy.action(state)

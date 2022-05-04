@@ -1,13 +1,8 @@
 import numpy as np
 import math
-
 from policy import Policy
-
 from features import StateActionFeatureVector
-
 from typing import Tuple
-from env import Env
-
 
 def Sarsa(
    env,  
@@ -17,16 +12,13 @@ def Sarsa(
     num_episode:int,
     eta: float,
     goal_reward: float,
-    epsilon=0.01
+    epsilon: float
 ) -> Tuple[np.array, Policy]:
-    """
-    Implement True online Sarsa(\lambda)
-    """
+    
     w = np.zeros((X.feature_vector_len()))
 
     def epsilon_greedy_policy(s,w,epsilon=.0):
         nA = env.nA 
-        #print(len(w))
         Q = [np.dot(w, X(s,a)) for a in range(nA)]
 
         if np.random.rand() < epsilon:
@@ -34,42 +26,78 @@ def Sarsa(
         else:
             return np.argmax(Q)
 
-
+    itr = 1; #to decay epsilon and alpha
+    
     for i in range(0, num_episode):
-        # print("Sarsa " + str(i))
         state = env.reset()
         action = epsilon_greedy_policy(state, w, epsilon)
-
-        x = X(state, action) #features
+        
+        if (i%(num_episode/100)==0):
+            epsilon = 1./(itr)
+            alpha = 1./(itr)
+            itr += 1
+#             print(alpha)
 
         while True:
+            x = X(state, action) #feauter vector
+            q_hat = np.dot(w, x) #approximate state action value function
+            
             new_state, reward, done, goal = env.step(action)
-
-            new_action = epsilon_greedy_policy(new_state, w, epsilon)
-
-            new_x = X(new_state, new_action)
-
-            val = np.dot(w, x)
-
-            new_val = np.dot(w, new_x)
-
+            
             if done and goal:
-                delta = reward + goal_reward - val
-            elif done:
-                delta = reward - eta - val
-            else:
-                delta = reward + gamma*new_val - val
-
-            w = w + alpha*delta*x
-
-            x = new_x
-            action = new_action
-
-            if done:
+                w = w + alpha*(reward + reward_goal - q_hat)*x
                 break
+            elif done:
+                w = w + alpha*(reward - eta - q_hat)*x
+                break
+            else:
+                new_action = epsilon_greedy_policy(new_state, w, epsilon)
+                new_x = X(new_state, new_action)
+                new_q_hat = np.dot(w, new_x)
+                
+                w = w + alpha*(reward + gamma*new_q_hat - q_hat)*x
+                
+                state = new_state
+                action = new_action
+
+#             new_action = epsilon_greedy_policy(new_state, w, epsilon)
+
+#             new_x = X(new_state, new_action)
+
+#             val = np.dot(w, x)
+
+#             new_val = np.dot(w, new_x)
+
+#             if done and goal:
+#                 delta = reward + goal_reward - val
+#             elif done:
+#                 delta = reward - eta - val
+#             else:
+#                 delta = reward + gamma*new_val - val
+
+#             w = w + alpha*delta*x
+#             print(w)
+
+#             x = new_x
+#             action = new_action
+
+#             if done:
+#                 break
 
     pi_star = GreedyPolicy(env.nA, w, X)
-
+    
+    state = env.reset()
+    
+    for i in range(0, 100):
+        action = pi_star.action(state)
+        new_state, reward, done, goal = env.step(action)
+        print("action", action, "state", new_state)
+        
+        if done or goal:
+            break
+        else:
+            state = new_state
+        
     return w, pi_star
 
 

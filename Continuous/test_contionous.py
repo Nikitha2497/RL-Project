@@ -3,6 +3,7 @@ import os
 sys.path.append('../')
 
 import numpy as np
+import math
 
 from env_continuous import ContinuousEnv
 from region import Rectangle
@@ -11,26 +12,28 @@ from features_poly import StateActionFeatureVectorWithPoly
 from features_poly import StateFeatureVectorWithPoly 
 
 from Sarsa import Sarsa
-
 from simulate_continuous import Simulate_Semigradient_TD
-
-
 
 #region env
 #There is no state cost here
-lambda1 = 1 #control cost
-
-
-noise_std =  0 #Noise standard deviation,
+gamma = 1
+alpha = 0.5 
+epsilon = 0.1 
+noise_std = math.sqrt(0) #Noise standard deviation,
 noise_mean = 0 #Noise mean
-beta1 =  0.01 #step size in horizontal direction
-beta2 = 0.01 #step size in vertical direction
 boundary =  Rectangle(0,0,0.7,0.7)
 not_safe_regions = [] #List of non safe Rectangles
 not_safe_regions.append(Rectangle(0.1,0.1,0.3,0.5))
 goal = Rectangle(0.1,0,0.2,0.1)
 start_state = tuple((0.1,0.6)) #Initial state
 
+beta1 =  0.01 #step size in horizontal direction
+beta2 = 0.01 #step size in vertical direction
+lambda1 = 0.5 #control cost
+goal_reward = 5; #terminal reward
+eta = 10
+num_episode = 1000
+########################################################
 
 env = ContinuousEnv(lambda1,
     noise_std,
@@ -42,23 +45,11 @@ env = ContinuousEnv(lambda1,
     goal,
     start_state)
 
-#end region
-
-
-goal_reward = 5; #terminal reward
-eta = 100
-
-
-gamma = 1
-alpha = 0.5 
-num_episode = 100000
-epsilon = 0.1 
-
 runs = 1
 
 failure_prob_with_eta = {}
 
-num_episode_simulated = 100000
+num_episode_simulated = 1000
 
 nA = 4
 X_state_action = StateActionFeatureVectorWithPoly(4)
@@ -80,20 +71,20 @@ for run in range(0,runs):
         epsilon)
 
     print(w_star)
-    print(pi_star)
+#     print(pi_star)
 
     # eta = eta+5
 
-    failure_prob = Simulate_Semigradient_TD(env, 
-        pi_star,
-        num_episode_simulated,
-        X_state,
-        gamma,
-        alpha)
+#     failure_prob = Simulate_Semigradient_TD(env, 
+#         pi_star,
+#         num_episode_simulated,
+#         X_state,
+#         gamma,
+#         alpha)
 
-    failure_prob_with_eta[eta] = failure_prob
+#     failure_prob_with_eta[eta] = failure_prob
 
-    print("failure_prob", failure_prob)
+#     print("failure_prob", failure_prob)
 
 
 
