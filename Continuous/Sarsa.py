@@ -3,6 +3,7 @@ import math
 from policy import Policy
 from features import StateActionFeatureVector
 from typing import Tuple
+from metric import Metric
 
 def Sarsa(
    env,  
@@ -13,10 +14,12 @@ def Sarsa(
     eta: float,
     goal_reward: float,
     epsilon: float
-) -> Tuple[np.array, Policy]:
+) -> Tuple[np.array, Policy, Metric]:
+    
+    metric = Metric(num_episode)
     
     w = np.zeros((X.feature_vector_len()))
-
+    
     def epsilon_greedy_policy(s,w,epsilon=.0):
         nA = env.nA 
         Q = [np.dot(w, X(s,a)) for a in range(nA)]
@@ -29,14 +32,15 @@ def Sarsa(
     itr = 1; #to decay epsilon and alpha
     
     for i in range(0, num_episode):
+#         print(i)
         state = env.reset()
         action = epsilon_greedy_policy(state, w, epsilon)
         
         if (i%(num_episode/100)==0):
-            epsilon = 1./(itr)
-            alpha = 1./(itr)
+#             epsilon = 1./(itr)
+            alpha = 0.5./(itr)
             itr += 1
-#             print(alpha)
+# #             print(alpha)
 
         while True:
             x = X(state, action) #feauter vector
@@ -45,7 +49,7 @@ def Sarsa(
             new_state, reward, done, goal = env.step(action)
             
             if done and goal:
-                w = w + alpha*(reward + reward_goal - q_hat)*x
+                w = w + alpha*(reward + goal_reward - q_hat)*x
                 break
             elif done:
                 w = w + alpha*(reward - eta - q_hat)*x
@@ -59,36 +63,18 @@ def Sarsa(
                 
                 state = new_state
                 action = new_action
-
-#             new_action = epsilon_greedy_policy(new_state, w, epsilon)
-
-#             new_x = X(new_state, new_action)
-
-#             val = np.dot(w, x)
-
-#             new_val = np.dot(w, new_x)
-
-#             if done and goal:
-#                 delta = reward + goal_reward - val
-#             elif done:
-#                 delta = reward - eta - val
-#             else:
-#                 delta = reward + gamma*new_val - val
-
-#             w = w + alpha*delta*x
-#             print(w)
-
-#             x = new_x
-#             action = new_action
-
-#             if done:
-#                 break
+            
+        Q_start = [np.dot(w, X(env.reset(), a)) for a in range(env.nA)]
+        metric.set_v_star_start(i, np.max(Q_start))
+#             metric.set_q_star_start(1, i, Q_start[1])
+#             metric.set_q_star_start(3, i , Q_start[3])
+#             metric.set_a_star_start(i,np.argmax(Q_start))
 
     pi_star = GreedyPolicy(env.nA, w, X)
     
     state = env.reset()
     
-    for i in range(0, 100):
+    while True:
         action = pi_star.action(state)
         new_state, reward, done, goal = env.step(action)
         print("action", action, "state", new_state)
@@ -98,7 +84,7 @@ def Sarsa(
         else:
             state = new_state
         
-    return w, pi_star
+    return w, pi_star, metric
 
 
 class GreedyPolicy(Policy):

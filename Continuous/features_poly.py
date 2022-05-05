@@ -40,7 +40,6 @@ class StateActionFeatureVectorWithPoly(StateActionFeatureVector):
 
         return ret_array
 
-
 #State is of the form(s1, s2) and the features for each state are [1, s1, s2, s1s2]
 #We have used the similar interface from the assignment.
 class StateFeatureVectorWithPoly(StateFeatureVector):

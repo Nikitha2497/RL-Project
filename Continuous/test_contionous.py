@@ -13,6 +13,8 @@ from features_poly import StateFeatureVectorWithPoly
 
 from Sarsa import Sarsa
 from simulate_continuous import Simulate_Semigradient_TD
+from metric import Metric
+import matplotlib.pylab as plt
 
 #region env
 #There is no state cost here
@@ -24,15 +26,15 @@ noise_mean = 0 #Noise mean
 boundary =  Rectangle(0,0,0.7,0.7)
 not_safe_regions = [] #List of non safe Rectangles
 not_safe_regions.append(Rectangle(0.1,0.1,0.3,0.5))
-goal = Rectangle(0.1,0,0.2,0.1)
+goal = Rectangle(0, 0, 0.7, 0.1)
 start_state = tuple((0.1,0.6)) #Initial state
 
-beta1 =  0.01 #step size in horizontal direction
-beta2 = 0.01 #step size in vertical direction
-lambda1 = 0.5 #control cost
-goal_reward = 5; #terminal reward
-eta = 10
-num_episode = 1000
+beta1 =  0.05 #step size in horizontal direction
+beta2 = 0.05 #step size in vertical direction
+lambda1 = 1 #control cost
+goal_reward = 50; #terminal reward
+eta = 100
+num_episode = 1
 ########################################################
 
 env = ContinuousEnv(lambda1,
@@ -62,7 +64,7 @@ if not os.path.exists('results'):
 
 for run in range(0,runs):
     print("############run", run, "#################")
-    (w_star, pi_star) = Sarsa(env,  gamma,
+    (w_star, pi_star, metric) = Sarsa(env,  gamma,
         alpha,
         X_state_action,
         num_episode,
@@ -73,6 +75,19 @@ for run in range(0,runs):
     print(w_star)
 #     print(pi_star)
 
+#     figure(1 + run)
+    plt.plot(metric.get_v_star_start())
+    plt.ylabel('V star start')
+    plt.show()
+#     plt.figure(2 + run)
+#     plt.plot(metric.get_a_star_start())
+#     plt.ylabel('a star start')
+#     plt.figure(3 + run)
+#     plt.plot(metric.get_q_star_start(1), label='W')
+#     plt.plot(metric.get_q_star_start(3), label='E')
+#     plt.legend(loc="upper right")
+#     plt.ylabel('Q (W, E)')
+    
     # eta = eta+5
 
 #     failure_prob = Simulate_Semigradient_TD(env, 
