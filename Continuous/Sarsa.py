@@ -37,8 +37,8 @@ def Sarsa(
         action = epsilon_greedy_policy(state, w, epsilon)
         
         if (i%(num_episode/100)==0):
-#             epsilon = 1./(itr)
-            alpha = 0.5./(itr)
+            epsilon = 1./(itr)
+            alpha = 0.5/(itr)
             itr += 1
 # #             print(alpha)
 

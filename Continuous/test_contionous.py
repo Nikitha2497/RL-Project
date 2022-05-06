@@ -20,8 +20,8 @@ import matplotlib.pylab as plt
 #There is no state cost here
 gamma = 1
 alpha = 0.5 
-epsilon = 0.1 
-noise_std = math.sqrt(0) #Noise standard deviation,
+epsilon = 0.2
+noise_std = math.sqrt(0.001) #Noise standard deviation,
 noise_mean = 0 #Noise mean
 boundary =  Rectangle(0,0,0.7,0.7)
 not_safe_regions = [] #List of non safe Rectangles
@@ -29,12 +29,12 @@ not_safe_regions.append(Rectangle(0.1,0.1,0.3,0.5))
 goal = Rectangle(0, 0, 0.7, 0.1)
 start_state = tuple((0.1,0.6)) #Initial state
 
-beta1 =  0.05 #step size in horizontal direction
-beta2 = 0.05 #step size in vertical direction
-lambda1 = 1 #control cost
+beta1 =  0.02 #step size in horizontal direction
+beta2 = 0.02 #step size in vertical direction
+lambda1 = 0.5 #1 #control cost
 goal_reward = 50; #terminal reward
-eta = 100
-num_episode = 1
+eta = 500 #100
+num_episode = 100000
 ########################################################
 
 env = ContinuousEnv(lambda1,

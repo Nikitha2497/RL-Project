@@ -86,6 +86,7 @@ class ContinuousEnv(Env):
 
 		#If the point in the goal region
 		if self.goal.is_in(new_x, new_y):
+			# print("I have seen a goal state")
 			return self._state, reward, True, True
 
 		return self._state, reward, False, False
