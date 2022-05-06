@@ -76,7 +76,7 @@ def Sarsa(
     
     while True:
         action = pi_star.action(state)
-        new_state, reward, done, goal = env.step(action)
+        new_state, reward, done, goal = env.step(action,False)
         print("action", action, "state", new_state)
         
         if done or goal:
