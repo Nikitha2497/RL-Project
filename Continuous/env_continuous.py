@@ -46,7 +46,7 @@ class ContinuousEnv(Env):
 		self._state = self.start_state
 		return self._state
 
-	def step(self, action):
+	def step(self, action, allow_noise=True):
 		assert action in list(range(self._nA)), "Invalid Action"
 
 		new_x = self._state[0]
@@ -54,22 +54,36 @@ class ContinuousEnv(Env):
 
 		#Actions
 		#0 - North. 1 - West, 2 - South, 3 - East 
-		
-		if action == 0:
-			new_y += self.beta2 + np.random.normal(self.noise_mean, self.noise_std)
-			new_x += np.random.normal(self.noise_mean, self.noise_std)
 
-		elif action == 1:
-			new_x -= self.beta1 + np.random.normal(self.noise_mean, self.noise_std)
-			new_y += np.random.normal(self.noise_mean, self.noise_std)
+		if not allow_noise:
+			if action == 0:
+				new_y += self.beta2
 
-		elif action == 2:
-			new_y -= self.beta2 + np.random.normal(self.noise_mean, self.noise_std)
-			new_x += np.random.normal(self.noise_mean, self.noise_std)
+			elif action == 1:
+				new_x -= self.beta1 
+
+			elif action == 2:
+				new_y -= self.beta2 
+
+			else:
+				new_x += self.beta1
 
 		else:
-			new_x += self.beta1 + np.random.normal(self.noise_mean, self.noise_std)
-			new_y += np.random.normal(self.noise_mean, self.noise_std)
+			if action == 0:
+				new_y += self.beta2 + np.random.normal(self.noise_mean, self.noise_std)
+				new_x += np.random.normal(self.noise_mean, self.noise_std)
+
+			elif action == 1:
+				new_x -= self.beta1 + np.random.normal(self.noise_mean, self.noise_std)
+				new_y += np.random.normal(self.noise_mean, self.noise_std)
+
+			elif action == 2:
+				new_y -= self.beta2 + np.random.normal(self.noise_mean, self.noise_std)
+				new_x += np.random.normal(self.noise_mean, self.noise_std)
+
+			else:
+				new_x += self.beta1 + np.random.normal(self.noise_mean, self.noise_std)
+				new_y += np.random.normal(self.noise_mean, self.noise_std)
 
 		self._state = tuple((new_x, new_y))
 

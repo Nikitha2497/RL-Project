@@ -23,7 +23,7 @@ def Simulate_Semigradient_TD(env: Env,
 		# print(i)
 		if (i%(num_episode/100)==0):
 			epsilon = 1./(itr)
-			alpha = 1./(itr)
+			alpha = 1./(itr+1)
 			itr += 1
 		while True:
 			# print("I am here")

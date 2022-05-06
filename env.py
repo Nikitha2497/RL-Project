@@ -11,7 +11,7 @@ class Env(object):
         """
         raise NotImplementedError()
 
-    def step(self,action:int) -> (int, int, bool, bool):
+    def step(self,action:int, allow_noise=True) -> (int, int, bool, bool):
         """
         proceed one step.
         return:

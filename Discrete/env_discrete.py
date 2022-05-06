@@ -90,13 +90,16 @@ class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
         self._state = self.start_state
         return self._state
 
-    def step(self, action):
+    def step(self, action, allow_noise=True):
         assert action in list(range(self._nA)), "Invalid Action"
         assert self._state != self.final_state, "Episode has ended!"
 
         prev_state = self._state
 
-        choice = np.random.choice(8, 1, p=self.prob_action[action])
+        if allow_noise:
+            choice = np.random.choice(8, 1, p=self.prob_action[action])
+        else:
+            choice = action
 
         row = int(prev_state / self.n)
         col = int(prev_state)%(self.n)
