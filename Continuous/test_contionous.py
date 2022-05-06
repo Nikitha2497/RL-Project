@@ -90,12 +90,16 @@ for run in range(0,runs):
     
     # eta = eta+5
 
-#     failure_prob = Simulate_Semigradient_TD(env, 
-#         pi_star,
-#         num_episode_simulated,
-#         X_state,
-#         gamma,
-#         alpha)
+    failure_prob, v_star_start_TD = Simulate_Semigradient_TD(env, 
+        pi_star,
+        num_episode_simulated,
+        X_state,
+        gamma,
+        alpha)
+
+    plt.plot(v_star_start_TD)
+    plt.ylabel('V star start TD')
+    plt.show()
 
 #     failure_prob_with_eta[eta] = failure_prob
 
