@@ -37,7 +37,7 @@ def Sarsa(
         action = epsilon_greedy_policy(state, w, epsilon)
         
         if (i%(num_episode/100)==0):
-            epsilon = 1./(itr)
+#             epsilon = 1./(itr)
             alpha = 0.5/(itr)
             itr += 1
 # #             print(alpha)
@@ -66,8 +66,8 @@ def Sarsa(
             
         Q_start = [np.dot(w, X(env.reset(), a)) for a in range(env.nA)]
         metric.set_v_star_start(i, np.max(Q_start))
-#             metric.set_q_star_start(1, i, Q_start[1])
-#             metric.set_q_star_start(3, i , Q_start[3])
+        metric.set_q_star_start(1, i, Q_start[1])
+        metric.set_q_star_start(3, i , Q_start[3])
 #             metric.set_a_star_start(i,np.argmax(Q_start))
 
     pi_star = GreedyPolicy(env.nA, w, X)

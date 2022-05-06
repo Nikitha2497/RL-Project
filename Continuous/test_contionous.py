@@ -20,7 +20,7 @@ import matplotlib.pylab as plt
 #There is no state cost here
 gamma = 1
 alpha = 0.5 
-epsilon = 0.2
+epsilon = 0.1
 noise_std = math.sqrt(0.001) #Noise standard deviation,
 noise_mean = 0 #Noise mean
 boundary =  Rectangle(0,0,0.7,0.7)
@@ -31,9 +31,9 @@ start_state = tuple((0.1,0.6)) #Initial state
 
 beta1 =  0.02 #step size in horizontal direction
 beta2 = 0.02 #step size in vertical direction
-lambda1 = 0.5 #1 #control cost
+lambda1 = 1 #1 #control cost
 goal_reward = 50; #terminal reward
-eta = 500 #100
+eta = 100 #100
 num_episode = 100000
 ########################################################
 
@@ -49,18 +49,18 @@ env = ContinuousEnv(lambda1,
 
 runs = 1
 
-failure_prob_with_eta = {}
+# failure_prob_with_eta = {}
 
-num_episode_simulated = 1000
+# num_episode_simulated = 1000
 
 nA = 4
 X_state_action = StateActionFeatureVectorWithPoly(4)
-X_state = StateFeatureVectorWithPoly()
+# X_state = StateFeatureVectorWithPoly()
 
 
 #create a results folder if one doesn't exist to store the plot figures
-if not os.path.exists('results'):
-    os.makedirs('results')
+# if not os.path.exists('results'):
+#     os.makedirs('results')
 
 for run in range(0,runs):
     print("############run", run, "#################")
@@ -75,18 +75,18 @@ for run in range(0,runs):
     print(w_star)
 #     print(pi_star)
 
-#     figure(1 + run)
+    plt.figure(1)
     plt.plot(metric.get_v_star_start())
-    plt.ylabel('V star start')
-    plt.show()
+    plt.ylabel('V star start')    
 #     plt.figure(2 + run)
 #     plt.plot(metric.get_a_star_start())
 #     plt.ylabel('a star start')
-#     plt.figure(3 + run)
-#     plt.plot(metric.get_q_star_start(1), label='W')
-#     plt.plot(metric.get_q_star_start(3), label='E')
-#     plt.legend(loc="upper right")
-#     plt.ylabel('Q (W, E)')
+    plt.figure(2)
+    plt.plot(metric.get_q_star_start(1), label='W')
+    plt.plot(metric.get_q_star_start(3), label='E')
+    plt.legend(loc="upper right")
+    plt.ylabel('Q (W, E)')
+    plt.show()
     
     # eta = eta+5
 
