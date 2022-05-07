@@ -11,6 +11,10 @@ from region import Rectangle
 from features_poly import StateActionFeatureVectorWithPoly
 from features_poly import StateFeatureVectorWithPoly 
 
+
+from features_tilecoding import StateActionFeatureVectorWithTile
+from features_tilecoding import StateFeatureVectorWithTile
+
 from Sarsa import Sarsa
 from simulate_continuous import Simulate_Semigradient_TD
 from metric import Metric
@@ -33,7 +37,7 @@ beta1 =  0.05 #step size in horizontal direction
 beta2 = 0.05 #step size in vertical direction
 lambda1 = 1 #1 #control cost
 goal_reward = 50; #terminal reward
-eta = 500 #100
+eta = 100 #100
 num_episode = 200000
 ########################################################
 
@@ -53,10 +57,29 @@ runs = 1
 
 num_episode_simulated = 1000
 
-nA = 4
-X_state_action = StateActionFeatureVectorWithPoly(4)
+#region polynomial features
+# nA = 4
+# X_state_action = StateActionFeatureVectorWithPoly(4)
 # X_state = StateFeatureVectorWithPoly()
+#end region
 
+#region tile coding features
+state_low  = np.array([0, 0])
+state_high = np.array([1, 1])
+nA = 4
+num_tilings = 1
+tile_width = np.array([0.1, 0.1])
+
+X_state_action = StateActionFeatureVectorWithTile(state_low,
+                 state_high,
+                 nA,
+                 num_tilings,
+                 tile_width)
+X_state = StateFeatureVectorWithTile(state_low,
+                 state_high,
+                 num_tilings,
+                 tile_width)
+#end region
 
 #create a results folder if one doesn't exist to store the plot figures
 # if not os.path.exists('results'):
@@ -92,16 +115,16 @@ for run in range(0,runs):
     
     # eta = eta+5
 
-    # failure_prob, v_star_start_TD = Simulate_Semigradient_TD(env, 
-    #     pi_star,
-    #     num_episode_simulated,
-    #     X_state,
-    #     gamma,
-    #     alpha)
+    failure_prob, v_star_start_TD = Simulate_Semigradient_TD(env, 
+        pi_star,
+        num_episode_simulated,
+        X_state,
+        gamma,
+        alpha)
 
-    # plt.plot(v_star_start_TD)
-    # plt.ylabel('V star start TD')
-    # plt.show()
+    plt.plot(v_star_start_TD)
+    plt.ylabel('V star start TD')
+    plt.show()
 
 #     failure_prob_with_eta[eta] = failure_prob
 

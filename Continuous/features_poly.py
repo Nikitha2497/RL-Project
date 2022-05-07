@@ -45,8 +45,8 @@ class StateActionFeatureVectorWithPoly(StateActionFeatureVector):
 #We have used the similar interface from the assignment.
 class StateFeatureVectorWithPoly(StateFeatureVector):
     def __init__(self):
-        # self.dimension = 4
-        self.dimension = 3
+        self.dimension = 4
+        # self.dimension = 3
 
     def feature_vector_len(self) -> int:
         return self.dimension
