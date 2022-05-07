@@ -23,7 +23,7 @@ alpha = 0.5
 epsilon = 0.1
 noise_std = math.sqrt(0.00) #Noise standard deviation,
 noise_mean = 0 #Noise mean
-boundary =  Rectangle(0,0,0.7,0.7)
+boundary =  Rectangle(0,0,0.7,0.7, True)
 not_safe_regions = [] #List of non safe Rectangles
 not_safe_regions.append(Rectangle(0.1,0.1,0.3,0.5))
 goal = Rectangle(0, 0, 0.7, 0.1)

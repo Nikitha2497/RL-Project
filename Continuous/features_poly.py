@@ -15,6 +15,7 @@ class StateActionFeatureVectorWithPoly(StateActionFeatureVector):
         
         self.num_actions = num_actions
         self.num_dimesions_per_action = 4
+        # self.num_dimesions_per_action = 3
         self.dimension = self.num_dimesions_per_action*self.num_actions
 
     def feature_vector_len(self) -> int:
@@ -31,7 +32,7 @@ class StateActionFeatureVectorWithPoly(StateActionFeatureVector):
         """
         ret_array = np.zeros(self.dimension)
 
-        offset = a*self.num_actions
+        offset = a*self.num_dimesions_per_action
 
         ret_array[offset] = 1
         ret_array[offset+1] = s[0]
@@ -44,7 +45,8 @@ class StateActionFeatureVectorWithPoly(StateActionFeatureVector):
 #We have used the similar interface from the assignment.
 class StateFeatureVectorWithPoly(StateFeatureVector):
     def __init__(self):
-        self.dimension = 4
+        # self.dimension = 4
+        self.dimension = 3
 
     def feature_vector_len(self) -> int:
         return self.dimension
