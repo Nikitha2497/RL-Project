@@ -25,6 +25,7 @@ def Sarsa(
         Q = [np.dot(w, X(s,a)) for a in range(nA)]
 
         if np.random.rand() < epsilon:
+#             print("I have taken random action")
             return np.random.randint(nA)
         else:
             return np.argmax(Q)
@@ -32,21 +33,25 @@ def Sarsa(
     itr = 1; #to decay epsilon and alpha
     
     for i in range(0, num_episode):
-#         print(i)
+#         print("==============================================")
+#         print("episode", i)
+        
         state = env.reset()
         action = epsilon_greedy_policy(state, w, epsilon)
         
         if (i%(num_episode/100)==0):
 #             epsilon = 1./(itr)
-            alpha = 0.5/(itr)
+            alpha = 1/(itr+1)
             itr += 1
 # #             print(alpha)
-
+            
         while True:
             x = X(state, action) #feauter vector
+            
             q_hat = np.dot(w, x) #approximate state action value function
             
             new_state, reward, done, goal = env.step(action)
+#             print("action", action, "state", new_state)
             
             if done and goal:
                 w = w + alpha*(reward + goal_reward - q_hat)*x
@@ -65,9 +70,13 @@ def Sarsa(
                 action = new_action
             
         Q_start = [np.dot(w, X(env.reset(), a)) for a in range(env.nA)]
+        
         metric.set_v_star_start(i, np.max(Q_start))
+        metric.set_q_star_start(0, i, Q_start[0])
         metric.set_q_star_start(1, i, Q_start[1])
-        metric.set_q_star_start(3, i , Q_start[3])
+        metric.set_q_star_start(2, i, Q_start[2])
+        metric.set_q_star_start(3, i, Q_start[3])
+        
 #             metric.set_a_star_start(i,np.argmax(Q_start))
 
     pi_star = GreedyPolicy(env.nA, w, X)
@@ -76,9 +85,9 @@ def Sarsa(
     
     while True:
         action = pi_star.action(state)
-        new_state, reward, done, goal = env.step(action,False)
+        new_state, reward, done, goal = env.step(action, False)
         print("action", action, "state", new_state)
-        
+         
         if done or goal:
             break
         else:
