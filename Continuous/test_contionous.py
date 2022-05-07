@@ -29,8 +29,8 @@ not_safe_regions.append(Rectangle(0.1,0.1,0.3,0.5))
 goal = Rectangle(0, 0, 0.7, 0.1)
 start_state = tuple((0.1,0.6)) #Initial state
 
-beta1 =  0.05 #step size in horizontal direction
-beta2 = 0.05 #step size in vertical direction
+beta1 =  0.1 #step size in horizontal direction
+beta2 = 0.1 #step size in vertical direction
 lambda1 = 1 #1 #control cost
 goal_reward = 1; #terminal reward
 eta = 5 #100
