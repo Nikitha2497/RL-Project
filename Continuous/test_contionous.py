@@ -37,7 +37,7 @@ beta1 =  0.1 #step size in horizontal direction
 beta2 = 0.1 #step size in vertical direction
 lambda1 = 1 #control cost
 goal_reward = 5; #terminal reward
-eta = 40 #W-40 E-100
+eta = 70 #W-15 E-70
 num_episode = 100000
 ########################################################
 
