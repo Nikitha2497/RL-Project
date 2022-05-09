@@ -62,7 +62,7 @@ env = ContinuousEnv(lambda1,
 
 #region tile coding features
 state_low  = np.array([0, 0])
-state_high = np.array([1, 1])
+state_high = np.array([0.7, 0.7])
 nA = 4
 num_tilings = 1
 tile_width = np.array([0.1, 0.1])
