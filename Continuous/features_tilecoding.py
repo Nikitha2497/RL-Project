@@ -50,12 +50,11 @@ class StateActionFeatureVectorWithTile(StateActionFeatureVector):
         print("num_tilings", self.num_tilings)
 
 
+
     def feature_vector_len(self) -> int:
         """
         return dimension of feature_vector: d = num_actions * num_tilings * num_tiles
         """
-        
-        print("dimension" , self.dimension)
         return self.dimension
 
    
@@ -165,4 +164,3 @@ class StateFeatureVectorWithTile(StateFeatureVector):
 
         ret_array = ret_nd_array.flatten()
         return ret_array
-

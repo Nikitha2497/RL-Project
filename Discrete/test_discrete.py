@@ -17,15 +17,15 @@ from matplotlib import colors
 
 from metric import Metric
 
-import seaborn as sns
-import pandas as pd
+# import seaborn as sns
+# import pandas as pd
 
 #Use tex for labelling the plots
-plt.rcParams['text.usetex'] = True
+# plt.rcParams['text.usetex'] = True
 
-from plot import compare_plot_CI
-from plot import plot_CI
-from plot import compare_plot_CI_seaborn
+# from plot import compare_plot_CI
+# from plot import plot_CI
+# from plot import compare_plot_CI_seaborn
 
 
 #region env
@@ -33,7 +33,7 @@ lambda1 = 1#control cost
 lambda2 = 0 #state cost
 
 
-primary_prob = 0.9
+primary_prob = 1
 
 start_state = 10
 
@@ -51,7 +51,7 @@ env = DiscreteEnv(lambda1, lambda2, primary_prob, state_matrix)
 #endregion
 
 goal_reward = 5; #terminal reward
-eta = 50
+eta = 15
 
 gamma = 1
 alpha = 0.5 #not using this, alpha is set to 1/itr
@@ -59,7 +59,7 @@ num_episode = 100000
 epsilon = 0.1 #not using this, epsilon is set to 1/itr
 
 # max_num_steps = 100 #This is to check if there is a loop or not
-runs = 10
+runs = 1
 #max_simulated_runs = 100
 ######################################################################################
 
@@ -68,16 +68,16 @@ runs = 10
 # num_episode_simulated = 100
 
 
-#create a results folder if one doesn't exist to store the plot figures
-if not os.path.exists('results'):
-	os.makedirs('results')
+# #create a results folder if one doesn't exist to store the plot figures
+# if not os.path.exists('results'):
+# 	os.makedirs('results')
 
-if not os.path.exists('data'):
-	os.makedirs('data')
+# if not os.path.exists('data'):
+# 	os.makedirs('data')
 
-#This is used for final plotting
-final_q_star_W_episodes = np.zeros((runs, num_episode))
-final_q_star_E_episodes = np.zeros((runs, num_episode))
+# #This is used for final plotting
+# final_q_star_W_episodes = np.zeros((runs, num_episode))
+# final_q_star_E_episodes = np.zeros((runs, num_episode))
 
 
 for run in range(0, runs):
@@ -97,17 +97,17 @@ for run in range(0, runs):
 
 	# eta = eta + 5
 	
-	V = np.zeros(Q_star.shape[0])
+# 	V = np.zeros(Q_star.shape[0])
 
-	for state in range(0, Q_star.shape[0]):
-		V[state] = max(Q_star[state])
+# 	for state in range(0, Q_star.shape[0]):
+# 		V[state] = max(Q_star[state])
 
-	# print(Q_star[env.reset()])
+# 	# print(Q_star[env.reset()])
 
-	pi_star.print_all()
+# 	pi_star.print_all()
 
-	if run == 0:
-		pi_star.save_tofile("data/pi_star_" + str(eta) + ".txt")
+# 	if run == 0:
+# 		pi_star.save_tofile("data/pi_star_" + str(eta) + ".txt")
 
 	#region plotting v star start
 	# plt.figure(1 + run)
@@ -126,16 +126,17 @@ for run in range(0, runs):
 	#end region
 
 	#region plotting q star
-	# plt.figure(3 + run)
-	# plt.plot(metric.get_q_star_start(1), label='W')
-	# plt.plot(metric.get_q_star_start(3), label='E')
-	# plt.legend(loc="upper right")
-	# plt.ylabel('Q (W, E)')
+	plt.figure(3 + run)
+	plt.plot(metric.get_q_star_start(1), label='W')
+	plt.plot(metric.get_q_star_start(3), label='E')
+	plt.legend(loc="upper right")
+	plt.ylabel('Q (W, E)')
+	plt.show()
 	# plt.savefig('results/run_' + str(run) +  '_q_star.png')
 	#end region plotting q star
 
-	final_q_star_W_episodes[run] = metric.get_q_star_start(1)
-	final_q_star_E_episodes[run] = metric.get_q_star_start(3)
+# 	final_q_star_W_episodes[run] = metric.get_q_star_start(1)
+# 	final_q_star_E_episodes[run] = metric.get_q_star_start(3)
 
 
 	#region Plot the surface plot for V
@@ -236,16 +237,15 @@ for run in range(0, runs):
 # print("I am here 1")
 # plt.savefig('results/q_star_E_W_' +str(eta) + '.png')
 
-compare_plot_CI(final_q_star_W_episodes, 'Q(I, W)' ,
-	final_q_star_E_episodes, 'Q(I, E)', 
-	r'\textbf{Epsiodes}', r'\textbf{Q (I , $\bullet$)}', 
-	'results/q_star_E_W_' + str(eta) + '.png')
+# compare_plot_CI(final_q_star_W_episodes, 'Q(I, W)' ,
+# 	final_q_star_E_episodes, 'Q(I, E)', 
+# 	r'\textbf{Epsiodes}', r'\textbf{Q (I , $\bullet$)}', 
+# 	'results/q_star_E_W_' + str(eta) + '.png')
 
-compare_plot_CI_seaborn(final_q_star_W_episodes, 'Q(I, W)' ,
-	final_q_star_E_episodes, 'Q(I, E)', 
-	r'\textbf{Epsiodes}', r'\textbf{Q (I , $\bullet$)}', 
-	'results/q_star_E_W_lineplot_95confidence' +str(eta) + '.png')
-
+# compare_plot_CI_seaborn(final_q_star_W_episodes, 'Q(I, W)' ,
+# 	final_q_star_E_episodes, 'Q(I, E)', 
+# 	r'\textbf{Epsiodes}', r'\textbf{Q (I , $\bullet$)}', 
+# 	'results/q_star_E_W_lineplot_95confidence' +str(eta) + '.png')
 
 
 

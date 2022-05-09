@@ -61,6 +61,9 @@ def Sarsa(
                 break
             else:
                 new_action = epsilon_greedy_policy(new_state, w, epsilon)
+#                 Q = [np.dot(w, X(new_state, a)) for a in range(env.nA)]
+#                 new_action = np.argmax(Q)
+    
                 new_x = X(new_state, new_action)
                 new_q_hat = np.dot(w, new_x)
                 
@@ -112,10 +115,6 @@ class GreedyPolicy(Policy):
         Q = [np.dot(self.w, self.X(state,a)) for a in range(self.nA)]
         # print("THIS STATE " , state, Q, np.argmax(Q))
         return np.argmax(Q)
-
-    def save_tofile(self, filename):
-        with open(filename, 'wb') as f:
-            np.save(f, self.w)
             
 
     

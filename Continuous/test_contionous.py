@@ -34,7 +34,7 @@ from plot import compare_plot_CI_seaborn
 gamma = 1
 alpha = 0.5 
 epsilon = 0.1
-noise_std = math.sqrt(0.001) #Noise standard deviation,
+noise_std = math.sqrt(0.0001) #Noise standard deviation,
 noise_mean = 0 #Noise mean
 boundary =  Rectangle(0.1,0.1,0.7,0.7, True) #The outer boundary
 not_safe_regions = [] #List of non safe Rectangles
@@ -45,8 +45,8 @@ start_state = tuple((0.25,0.65)) #Initial state
 beta1 =  0.1 #step size in horizontal direction
 beta2 = 0.1 #step size in vertical direction
 lambda1 = 1 #control cost
-goal_reward = 10; #terminal reward
-eta = 30 #W-40 E-100
+goal_reward = 5; #terminal reward
+eta = 70 #W-15 E-70
 num_episode = 100000
 ########################################################
 
@@ -72,7 +72,7 @@ num_episode_simulated = 1000
 # X_state = StateFeatureVectorWithPoly()
 
 #region tile coding features
-state_low  = np.array([0.1, 0.1])
+state_low  = np.array([0, 0])
 state_high = np.array([0.7, 0.7])
 nA = 4
 num_tilings = 1
@@ -89,11 +89,8 @@ X_state = StateFeatureVectorWithTile(state_low,
                  tile_width)
 
 #create a results folder if one doesn't exist to store the plot figures
-if not os.path.exists('results'):
-    os.makedirs('results')
-
-if not os.path.exists('data'):
-    os.makedirs('data')
+# if not os.path.exists('results'):
+#     os.makedirs('results')
 
 #This is used for final plotting
 final_q_star_W_episodes = np.zeros((runs, num_episode))
@@ -111,6 +108,7 @@ for run in range(0,runs):
         goal_reward,
         epsilon)
 
+
     if run == 0:
         print("Saved the pi_star weights to a file")
         pi_star.save_tofile('data/pi_star_' + str(eta) + '.txt')
@@ -119,7 +117,7 @@ for run in range(0,runs):
     final_q_star_W_episodes[run] = metric.get_q_star_start(1)
     final_q_star_E_episodes[run] = metric.get_q_star_start(3)
 
-#Plotting v star a star and q star
+# Plotting v star a star and q star
 #     plt.figure(1)
 #     plt.plot(metric.get_v_star_start())
 #     plt.ylabel('V star start')    
@@ -153,7 +151,6 @@ for run in range(0,runs):
 
 #     print("failure_prob", failure_prob)
 
-
 compare_plot_CI(final_q_star_W_episodes, 'Q(I, W)' ,
     final_q_star_E_episodes, 'Q(I, E)', 
     r'\textbf{Epsiodes}', r'\textbf{Q (I , $\bullet$)}', 
@@ -163,7 +160,6 @@ compare_plot_CI_seaborn(final_q_star_W_episodes, 'Q(I, W)' ,
     final_q_star_E_episodes, 'Q(I, E)', 
     r'\textbf{Epsiodes}', r'\textbf{Q (I , $\bullet$)}', 
     'results/q_star_E_W_lineplot_95confidence' +str(eta) + '.png')
-
 
 
 
