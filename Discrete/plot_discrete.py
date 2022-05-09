@@ -51,6 +51,7 @@ for i in range(0, m):
 		if state_matrix[i][j] == -1:
 			red_regions[i][j] = 1 
 
+fontsize = 14
 
 def plot_line(pi_star, allow_noise=False) -> Tuple[list, list]:
 	x = []
@@ -90,6 +91,10 @@ def setup_grid():
 
 	return fig,ax
 
+def save_figure(filename):
+	plt.savefig(filename + '.png')
+	plt.savefig(filename + '.svg')
+
 def plot_policy(eta):
 	fig, ax = setup_grid()
 	pi_star = RestoredGreedyPolicy(states)
@@ -97,7 +102,7 @@ def plot_policy(eta):
 
 	for i in range(0,m):
 		for j in range(0, n):
-			if state_matrix[i][j] != 0:
+			if state_matrix[i][j] == -1 or state_matrix[i][j] == 1:
 				continue
 			state = i*n + j 
 
@@ -115,7 +120,9 @@ def plot_policy(eta):
 
 			plt.arrow(j+0.5, i +0.5, dx, dy,  head_width=0.2, head_length=0.2, linewidth=0.1, color='b', length_includes_head=True)
 
-	plt.savefig("results/policy_" + str(eta) + ".png")
+	save_figure("results/policy_" + str(eta))
+	plt.clf()
+
 
 
 
@@ -145,12 +152,15 @@ plt.plot(x,y, color = 'orange', label = r'$\eta$ = '+ str(eta2))
 #             ha='center', 
 #             va='center', 
 #             arrowprops={'arrowstyle': '->', 'lw': 2,  'color': 'orange'})
-plt.legend(loc = "upper right")
-# plt.show()
-plt.savefig('results/grid_' + str(eta1) + '_'+ str(eta2) + '.png')
+plt.legend(loc = "upper right", fontsize = fontsize)
+save_figure('results/grid_' + str(eta1) + '_'+ str(eta2))
+
+#Policy plot
+plot_policy(15)
+plot_policy(50)
 
 
-#Set the grid world on the plot
+#Sample trajectories plot
 # fig, ax = setup_grid()
 # num_simulations = 100000
 
@@ -171,15 +181,9 @@ plt.savefig('results/grid_' + str(eta1) + '_'+ str(eta2) + '.png')
 # 	plt.plot(x,y, color = 'blue', alpha = alpha)
 # 	(x,y) = plot_line(pi_star2, True)
 # 	plt.plot(x,y, color = 'orange', alpha = alpha)
-# plt.legend(loc="upper right")
-# plt.savefig('results/grid_sampletrajs_' + str(eta1) + '_'+ str(eta2) + '.png')
+# plt.legend(loc="upper right", fontsize = fontsize)
+# save_figure('results/grid_sampletrajs_' + str(eta1) + '_'+ str(eta2))
 # plt.close()
-
-
-#Policy plot
-plot_policy(15)
-plot_policy(50)
-
 
 
 

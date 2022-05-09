@@ -31,3 +31,24 @@ class Rectangle():
 
 		return True
 
+
+	def get_x1(self):
+		return self.x1
+
+	def get_x2(self):
+		return self.x2
+
+	def get_y1(self):
+		return self.y1
+
+	def get_y2(self):
+		return self.y2
+
+	def length(self):
+		return (self.x2 - self.x1)
+
+	def width(self):
+		return (self.y2 - self.y1)
+
+	def center(self):
+		return (self.x1 + self.x2)/2 , (self.y1 + self.y2)/2

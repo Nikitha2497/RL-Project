@@ -115,6 +115,10 @@ class GreedyPolicy(Policy):
         Q = [np.dot(self.w, self.X(state,a)) for a in range(self.nA)]
         # print("THIS STATE " , state, Q, np.argmax(Q))
         return np.argmax(Q)
+
+    def save_tofile(self, filename):
+        with open(filename, 'wb') as f:
+            np.save(f, self.w)
             
 
     
