@@ -137,6 +137,8 @@ def compare_plot_CI_seaborn(values1: np.array,
 	             label = label2)
 	print("Completed second CI evaluation")
 	ax.legend(loc="upper right")
+	if pfailgraph:
+		plt.ylim(0, 1)
 	plt.savefig(filename)
 	plt.clf()
 

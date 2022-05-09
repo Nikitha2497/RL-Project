@@ -16,6 +16,7 @@ from matplotlib import colors
 
 from plot import compare_plot_CI
 from plot import plot_CI
+from plot import compare_plot_CI_seaborn
 
 from policy import Policy
 
@@ -91,6 +92,10 @@ compare_plot_CI(failure_prob_runs1, r'$\eta$ = ' + str(eta1) ,
 	r'\textbf{Epsiodes}', r'\textbf{$P_{fail}$}', 
 	'results/Pfail_' + str(eta1) + '_'+ str(eta2) + '.png', True)
 
+compare_plot_CI_seaborn(failure_prob_runs1, r'$\eta$ = ' + str(eta1) ,
+	failure_prob_runs2, r'$\eta$ = ' + str(eta2) , 
+	r'\textbf{Epsiodes}', r'\textbf{$P_{fail}$}', 
+	'results/Pfail_lineplot_95confidence_' + str(eta1) + '_'+ str(eta2) + '.png', True)
 
 
 

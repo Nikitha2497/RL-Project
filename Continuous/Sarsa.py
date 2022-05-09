@@ -42,7 +42,7 @@ def Sarsa(
             epsilon = 1/(itr+1)
             alpha = 1/(itr+1)
             itr += 1
-            print(i/(num_episode/100))
+            # print(i/(num_episode/100))
 # #             print(alpha)
             
         while True:
@@ -81,16 +81,16 @@ def Sarsa(
 
     pi_star = GreedyPolicy(env.nA, w, X)
     
-    state = env.reset()
-    while True:
-        action = pi_star.action(state)
-        new_state, reward, done, goal = env.step(action, False)
-        print("action", action, "state", new_state)
+    # state = env.reset()
+    # while True:
+    #     action = pi_star.action(state)
+    #     new_state, reward, done, goal = env.step(action, False)
+    #     print("action", action, "state", new_state)
          
-        if done or goal:
-            break
-        else:
-            state = new_state
+    #     if done or goal:
+    #         break
+    #     else:
+    #         state = new_state
         
     return w, pi_star, metric
 

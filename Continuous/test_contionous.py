@@ -20,6 +20,15 @@ from simulate_continuous import Simulate_Semigradient_TD
 from metric import Metric
 import matplotlib.pylab as plt
 
+import random
+
+
+from plot import plot_CI
+from plot import compare_plot_CI
+
+from plot import compare_plot_CI_seaborn
+
+
 #region env
 #There is no state cost here
 gamma = 1
@@ -37,7 +46,7 @@ beta1 =  0.1 #step size in horizontal direction
 beta2 = 0.1 #step size in vertical direction
 lambda1 = 1 #control cost
 goal_reward = 10; #terminal reward
-eta = 100 #W-40 E-100
+eta = 30 #W-40 E-100
 num_episode = 100000
 ########################################################
 
@@ -51,7 +60,7 @@ env = ContinuousEnv(lambda1,
     goal,
     start_state)
 
-runs = 1
+runs = 10
 
 # failure_prob_with_eta = {}
 
@@ -63,8 +72,8 @@ num_episode_simulated = 1000
 # X_state = StateFeatureVectorWithPoly()
 
 #region tile coding features
-state_low  = np.array([0, 0])
-state_high = np.array([1, 1])
+state_low  = np.array([0.1, 0.1])
+state_high = np.array([0.7, 0.7])
 nA = 4
 num_tilings = 1
 tile_width = np.array([0.1, 0.1])
@@ -86,7 +95,13 @@ if not os.path.exists('results'):
 if not os.path.exists('data'):
     os.makedirs('data')
 
+#This is used for final plotting
+final_q_star_W_episodes = np.zeros((runs, num_episode))
+final_q_star_E_episodes = np.zeros((runs, num_episode))
+
+
 for run in range(0,runs):
+    random.seed(run)
     print("############run", run, "#################")
     (w_star, pi_star, metric) = Sarsa(env,  gamma,
         alpha,
@@ -96,42 +111,59 @@ for run in range(0,runs):
         goal_reward,
         epsilon)
 
-    pi_star.save_tofile('data/pi_star_' + str(eta) + '.txt')
-    print(w_star)
+    if run == 0:
+        print("Saved the pi_star weights to a file")
+        pi_star.save_tofile('data/pi_star_' + str(eta) + '.txt')
+        # print(w_star)
 
+    final_q_star_W_episodes[run] = metric.get_q_star_start(1)
+    final_q_star_E_episodes[run] = metric.get_q_star_start(3)
 
-    plt.figure(1)
-    plt.plot(metric.get_v_star_start())
-    plt.ylabel('V star start')    
-#     plt.figure(2 + run)
-#     plt.plot(metric.get_a_star_start())
-#     plt.ylabel('a star start')
-    plt.figure(2)
-    #plt.plot(metric.get_q_star_start(0), label='N')
-    plt.plot(metric.get_q_star_start(1), label='W')
-    # plt.plot(metric.get_q_star_start(2), label='S')
-    plt.plot(metric.get_q_star_start(3), label='E')
-    plt.legend(loc="upper right")
-    plt.ylabel('Q (W, E)')
-    plt.show()
+#Plotting v star a star and q star
+#     plt.figure(1)
+#     plt.plot(metric.get_v_star_start())
+#     plt.ylabel('V star start')    
+# #     plt.figure(2 + run)
+# #     plt.plot(metric.get_a_star_start())
+# #     plt.ylabel('a star start')
+#     plt.figure(2)
+#     #plt.plot(metric.get_q_star_start(0), label='N')
+#     plt.plot(metric.get_q_star_start(1), label='W')
+#     # plt.plot(metric.get_q_star_start(2), label='S')
+#     plt.plot(metric.get_q_star_start(3), label='E')
+#     plt.legend(loc="upper right")
+#     plt.ylabel('Q (W, E)')
+#     plt.show()
     
-    # eta = eta+5
 
-    failure_prob, v_star_start_TD = Simulate_Semigradient_TD(env, 
-        pi_star,
-        num_episode_simulated,
-        X_state,
-        gamma,
-        alpha)
+    # failure_prob, v_star_start_TD = Simulate_Semigradient_TD(env, 
+    #     pi_star,
+    #     num_episode_simulated,
+    #     X_state,
+    #     gamma,
+    #     alpha)
     
-    plt.figure(3)
-    plt.plot(v_star_start_TD)
-    plt.ylabel('V star start TD')
-    plt.show()
+    #Plotting v star for semigradient TD prediction
+    # plt.figure(3)
+    # plt.plot(v_star_start_TD)
+    # plt.ylabel('V star start TD')
+    # plt.show()
 
 #     failure_prob_with_eta[eta] = failure_prob
 
 #     print("failure_prob", failure_prob)
+
+
+compare_plot_CI(final_q_star_W_episodes, 'Q(I, W)' ,
+    final_q_star_E_episodes, 'Q(I, E)', 
+    r'\textbf{Epsiodes}', r'\textbf{Q (I , $\bullet$)}', 
+    'results/q_star_E_W_' + str(eta) + '.png')
+
+compare_plot_CI_seaborn(final_q_star_W_episodes, 'Q(I, W)' ,
+    final_q_star_E_episodes, 'Q(I, E)', 
+    r'\textbf{Epsiodes}', r'\textbf{Q (I , $\bullet$)}', 
+    'results/q_star_E_W_lineplot_95confidence' +str(eta) + '.png')
+
 
 
 

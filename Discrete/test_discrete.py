@@ -205,16 +205,16 @@ for run in range(0, runs):
 #end region Plotting eta with failure probability
 
 #Plotting the Q star for W and E actions for the Initial state
-q_star_W_df = pd.DataFrame(final_q_star_W_episodes)
-q_star_E_df = pd.DataFrame(final_q_star_E_episodes)
+# q_star_W_df = pd.DataFrame(final_q_star_W_episodes)
+# q_star_E_df = pd.DataFrame(final_q_star_E_episodes)
 
-q_star_W_df = pd.melt(frame = q_star_W_df,
-             var_name = 'Episodes',
-             value_name = 'runs')
+# q_star_W_df = pd.melt(frame = q_star_W_df,
+#              var_name = 'Episodes',
+#              value_name = 'runs')
 
-q_star_E_df = pd.melt(frame = q_star_E_df,
-             var_name = 'Episodes',
-             value_name = 'runs')
+# q_star_E_df = pd.melt(frame = q_star_E_df,
+#              var_name = 'Episodes',
+#              value_name = 'runs')
 
 # fig, ax = plt.subplots()
 # ax.set_ylabel(r'\textbf{Q (I , $\bullet$)}')
