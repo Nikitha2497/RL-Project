@@ -25,16 +25,16 @@ import matplotlib.pylab as plt
 gamma = 1
 alpha = 0.5 
 epsilon = 0.1
-noise_std = math.sqrt(0.001) #Noise standard deviation,
+noise_std = math.sqrt(0.0005) #Noise standard deviation,
 noise_mean = 0 #Noise mean
-boundary =  Rectangle(0.1,0.1,0.7,0.7, True) #The outer boundary
+boundary =  Rectangle(0.1,0.1,0.8,0.8, True) #The outer boundary
 not_safe_regions = [] #List of non safe Rectangles
 not_safe_regions.append(Rectangle(0.2,0.2,0.4,0.6))
 goal = Rectangle(0.2, 0.1, 0.3, 0.2)
 start_state = tuple((0.25,0.65)) #Initial state
 
-beta1 =  0.1 #step size in horizontal direction
-beta2 = 0.1 #step size in vertical direction
+beta1 =  0.05 #step size in horizontal direction
+beta2 = 0.05 #step size in vertical direction
 lambda1 = 1 #control cost
 goal_reward = 10; #terminal reward
 eta = 100 #W-40 E-100
@@ -128,6 +128,3 @@ for run in range(0,runs):
 #     failure_prob_with_eta[eta] = failure_prob
 
 #     print("failure_prob", failure_prob)
-
-
-

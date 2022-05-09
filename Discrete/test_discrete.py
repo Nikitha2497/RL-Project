@@ -74,52 +74,53 @@ for run in range(0, runs):
 	    epsilon,
 	    False)
 
-	eta = eta + 5
+# 	eta = eta + 5
 	
-	V = np.zeros(Q_star.shape[0])
+# 	V = np.zeros(Q_star.shape[0])
 
-	for state in range(0, Q_star.shape[0]):
-		V[state] = max(Q_star[state])
+# 	for state in range(0, Q_star.shape[0]):
+# 		V[state] = max(Q_star[state])
 
 	# print(Q_star[env.reset()])
 	# pi_star.print_all()
-	plt.figure(1 + run)
-	plt.plot(metric.get_v_star_start())
-	plt.ylabel('V star start')
-	plt.savefig('results/run_' + str(run) +  '_v_star.png')
-	plt.clf()
-	plt.figure(2 + run)
-	plt.plot(metric.get_a_star_start())
-	plt.ylabel('a star start')
-	plt.savefig('results/run_' + str(run) +  '_a_star.png')
-	plt.clf()
+# 	plt.figure(1 + run)
+# 	plt.plot(metric.get_v_star_start())
+# 	plt.ylabel('V star start')
+# 	plt.savefig('results/run_' + str(run) +  '_v_star.png')
+# 	plt.clf()
+# 	plt.figure(2 + run)
+# 	plt.plot(metric.get_a_star_start())
+# 	plt.ylabel('a star start')
+# 	plt.savefig('results/run_' + str(run) +  '_a_star.png')
+# 	plt.clf()
 	plt.figure(3 + run)
 	plt.plot(metric.get_q_star_start(1), label='W')
 	plt.plot(metric.get_q_star_start(3), label='E')
 	plt.legend(loc="upper right")
 	plt.ylabel('Q (W, E)')
-	plt.savefig('results/run_' + str(run) +  '_q_star.png')
+	plt.show()    
+# 	plt.savefig('results/run_' + str(run) +  '_q_star.png')
 	
 
 
-	#Plot the surface plot for V
-	fig = plt.figure()
-	ax = fig.add_subplot(111, projection='3d')
-	x =  np.arange(0, state_matrix.shape[0] - 1, 1)
-	y =  np.arange(0, state_matrix.shape[1] - 1, 1)
-	X, Y = np.meshgrid(x, y)
-	zs = np.array(V[np.ravel(X)*state_matrix.shape[1] + np.ravel(Y)])
-	Z = zs.reshape(X.shape)
+# 	#Plot the surface plot for V
+# 	fig = plt.figure()
+# 	ax = fig.add_subplot(111, projection='3d')
+# 	x =  np.arange(0, state_matrix.shape[0] - 1, 1)
+# 	y =  np.arange(0, state_matrix.shape[1] - 1, 1)
+# 	X, Y = np.meshgrid(x, y)
+# 	zs = np.array(V[np.ravel(X)*state_matrix.shape[1] + np.ravel(Y)])
+# 	Z = zs.reshape(X.shape)
 
-	ax.plot_surface(X, Y, Z)
+# 	ax.plot_surface(X, Y, Z)
 
-	ax.set_xlabel('X')
-	ax.set_ylabel('Y')
-	ax.set_zlabel('V_star')
+# 	ax.set_xlabel('X')
+# 	ax.set_ylabel('Y')
+# 	ax.set_zlabel('V_star')
 
-	plt.savefig('results/run_' + str(run) +  '_v.png')
-	plt.clf()
-	plt.close()
+# 	plt.savefig('results/run_' + str(run) +  '_v.png')
+# 	plt.clf()
+# 	plt.close()
 	
 	#TODO - Plot the policy graph
 	
@@ -149,21 +150,21 @@ for run in range(0, runs):
 
 # 	failure_prob = failed_runs/max_simulated_runs
 
-	failure_prob = Simulate_TD(env, pi_star, num_episode_simulated, gamma, alpha, start_state, max_num_steps, run)
+# 	failure_prob = Simulate_TD(env, pi_star, num_episode_simulated, gamma, alpha, start_state, max_num_steps, run)
 
-	failure_prob_with_eta[eta] = failure_prob
+# 	failure_prob_with_eta[eta] = failure_prob
 
-	print("failure_prob", failure_prob)
+# 	print("failure_prob", failure_prob)
 
 
-# #Plotting eta with failure probability
-lists = sorted(failure_prob_with_eta.items())
+# # #Plotting eta with failure probability
+# lists = sorted(failure_prob_with_eta.items())
 
-x, y = zip(*lists)
+# x, y = zip(*lists)
 
-plt.plot(x, y)
-plt.savefig('results/failure_prob.png')
-# plt.show()
+# plt.plot(x, y)
+# plt.savefig('results/failure_prob.png')
+# # plt.show()
 
 
 
