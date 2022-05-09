@@ -27,3 +27,17 @@ class Policy(object):
         print all the action prob
         """
         raise NotImplementedError()
+
+    def save_tofile(self, filename):
+        """
+        save the state to a file
+        """
+        raise NotImplementedError()
+
+    def restore_fromfile(self, filename):
+        """
+        restores the policy from file
+        """
+        raise NotImplementedError()
+
+
