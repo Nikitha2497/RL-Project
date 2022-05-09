@@ -25,19 +25,19 @@ import matplotlib.pylab as plt
 gamma = 1
 alpha = 0.5 
 epsilon = 0.1
-noise_std = math.sqrt(0.0005) #Noise standard deviation,
+noise_std = math.sqrt(0.0001) #Noise standard deviation,
 noise_mean = 0 #Noise mean
-boundary =  Rectangle(0.1,0.1,0.8,0.8, True) #The outer boundary
+boundary =  Rectangle(0.1,0.1,0.7,0.7, True) #The outer boundary
 not_safe_regions = [] #List of non safe Rectangles
 not_safe_regions.append(Rectangle(0.2,0.2,0.4,0.6))
 goal = Rectangle(0.2, 0.1, 0.3, 0.2)
 start_state = tuple((0.25,0.65)) #Initial state
 
-beta1 =  0.05 #step size in horizontal direction
-beta2 = 0.05 #step size in vertical direction
+beta1 =  0.1 #step size in horizontal direction
+beta2 = 0.1 #step size in vertical direction
 lambda1 = 1 #control cost
-goal_reward = 10; #terminal reward
-eta = 100 #W-40 E-100
+goal_reward = 5; #terminal reward
+eta = 40 #W-40 E-100
 num_episode = 100000
 ########################################################
 
@@ -64,7 +64,7 @@ num_episode_simulated = 1000
 
 #region tile coding features
 state_low  = np.array([0, 0])
-state_high = np.array([1, 1])
+state_high = np.array([0.7, 0.7])
 nA = 4
 num_tilings = 1
 tile_width = np.array([0.1, 0.1])
@@ -80,11 +80,8 @@ X_state = StateFeatureVectorWithTile(state_low,
                  tile_width)
 
 #create a results folder if one doesn't exist to store the plot figures
-if not os.path.exists('results'):
-    os.makedirs('results')
-
-if not os.path.exists('data'):
-    os.makedirs('data')
+# if not os.path.exists('results'):
+#     os.makedirs('results')
 
 for run in range(0,runs):
     print("############run", run, "#################")
@@ -96,9 +93,8 @@ for run in range(0,runs):
         goal_reward,
         epsilon)
 
-    pi_star.save_tofile('data/pi_star_' + str(eta) + '.txt')
-    print(w_star)
-
+#     print(w_star)
+#     print(pi_star)
 
     plt.figure(1)
     plt.plot(metric.get_v_star_start())
