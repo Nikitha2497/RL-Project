@@ -99,7 +99,14 @@ class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
         if allow_noise:
             choice = np.random.choice(8, 1, p=self.prob_action[action])
         else:
-            choice = action
+            if action == 0:
+                choice = 0
+            elif action == 1:
+                choice = 2
+            elif action == 2:
+                choice = 4
+            else:
+                choice = 6
 
         row = int(prev_state / self.n)
         col = int(prev_state)%(self.n)

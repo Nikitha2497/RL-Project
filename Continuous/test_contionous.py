@@ -86,8 +86,11 @@ X_state = StateFeatureVectorWithTile(state_low,
 #end region
 
 #create a results folder if one doesn't exist to store the plot figures
-# if not os.path.exists('results'):
-#     os.makedirs('results')
+if not os.path.exists('results'):
+    os.makedirs('results')
+
+if not os.path.exists('data'):
+    os.makedirs('data')
 
 for run in range(0,runs):
     print("############run", run, "#################")
@@ -99,6 +102,7 @@ for run in range(0,runs):
         goal_reward,
         epsilon)
 
+    pi_star.save_tofile('data/pi_star_' + str(eta) + '.txt')
     print(w_star)
 #     print(pi_star)
 

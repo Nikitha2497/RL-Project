@@ -151,3 +151,8 @@ class GreedyPolicy(Policy):
 
         	else:
         		print("state " , int(state/n) , int(state%n), " : " , self.state_action_dict[state], "E")
+
+    def save_tofile(self, filename):
+        with open(filename, 'w') as f:
+            for state in self.state_action_dict:
+                print(state, ":", self.state_action_dict[state], file=f)

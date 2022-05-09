@@ -5,6 +5,8 @@ from policy import Policy
 
 import matplotlib.pylab as plt
 
+from typing import Tuple
+
 def Simulate_MC(env: Env, policy: Policy, max_num_steps:int) -> int:
 	steps = 0
 	state = env.reset()
@@ -33,7 +35,7 @@ def Simulate_TD(env: Env,
 				 alpha: int,
 				 start_state:int,
 				 max_num_steps: int,
-				 run:int) -> float:
+				 run:int) -> Tuple[float, np.array]:
 	V = np.zeros(env._nS)
 
 	v_star = np.zeros(num_episode)
@@ -75,13 +77,7 @@ def Simulate_TD(env: Env,
 
 		v_star[episode] = V[start_state]
 
-	plt.plot(v_star)
-	plt.ylabel('V star TD')
-	plt.savefig('results/TD_convergence_' + str(run) + '.png')
-	plt.close()
-	plt.clf()
-
-	return V[start_state]
+	return V[start_state], v_star
 
 
 
