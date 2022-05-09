@@ -17,14 +17,14 @@ def Simulate_Semigradient_TD(env: Env,
     
 	v_star_start = np.zeros((num_episode))
 
-	itr = 1; #to decay epsilon and alpha
+	itr = 1; #to decay alpha
 	for i in range(0, num_episode):
 		state = env.reset()
 		# print(i)
 		if (i%(num_episode/100)==0):
-			epsilon = 1./(itr)
 			alpha = 1./(itr+1)
 			itr += 1
+			print(i/(num_episode/100))
 		while True:
 			# print("I am here")
 			action = policy.action(state)

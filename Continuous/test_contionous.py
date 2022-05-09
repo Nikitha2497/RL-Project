@@ -25,19 +25,19 @@ import matplotlib.pylab as plt
 gamma = 1
 alpha = 0.5 
 epsilon = 0.1
-noise_std = math.sqrt(0) #Noise standard deviation,
+noise_std = math.sqrt(0.001) #Noise standard deviation,
 noise_mean = 0 #Noise mean
-boundary =  Rectangle(0,0,0.8,0.8, True) #The outer boundary
+boundary =  Rectangle(0.1,0.1,0.7,0.7, True) #The outer boundary
 not_safe_regions = [] #List of non safe Rectangles
-not_safe_regions.append(Rectangle(0.1,0.1,0.3,0.5))
-goal = Rectangle(0, 0, 0.8, 0.1)
-start_state = tuple((0.1,0.6)) #Initial state
+not_safe_regions.append(Rectangle(0.2,0.2,0.4,0.6))
+goal = Rectangle(0.2, 0.1, 0.3, 0.2)
+start_state = tuple((0.25,0.65)) #Initial state
 
-beta1 =  0.05 #step size in horizontal direction
-beta2 = 0.05 #step size in vertical direction
-lambda1 = 1 #1 #control cost
+beta1 =  0.1 #step size in horizontal direction
+beta2 = 0.1 #step size in vertical direction
+lambda1 = 1 #control cost
 goal_reward = 10; #terminal reward
-eta = 30 #100
+eta = 100 #W-40 E-100
 num_episode = 100000
 ########################################################
 
@@ -55,35 +55,29 @@ runs = 1
 
 # failure_prob_with_eta = {}
 
-num_episode_simulated = 100000
+num_episode_simulated = 1000
 
-#region polynomial features
+##polynomial features
 # nA = 4
 # X_state_action = StateActionFeatureVectorWithPoly(4)
 # X_state = StateFeatureVectorWithPoly()
-#end region
 
 #region tile coding features
 state_low  = np.array([0, 0])
-state_high = np.array([0.8, 0.8])
+state_high = np.array([1, 1])
 nA = 4
 num_tilings = 1
-tile_width = np.array([0.05, 0.05])
+tile_width = np.array([0.1, 0.1])
 
 X_state_action = StateActionFeatureVectorWithTile(state_low,
                  state_high,
                  nA,
                  num_tilings,
                  tile_width)
-
-
-
-
 X_state = StateFeatureVectorWithTile(state_low,
                  state_high,
                  num_tilings,
                  tile_width)
-#end region
 
 #create a results folder if one doesn't exist to store the plot figures
 # if not os.path.exists('results'):
@@ -99,7 +93,7 @@ for run in range(0,runs):
         goal_reward,
         epsilon)
 
-    print(w_star)
+#     print(w_star)
 #     print(pi_star)
 
     plt.figure(1)
@@ -114,21 +108,22 @@ for run in range(0,runs):
     # plt.plot(metric.get_q_star_start(2), label='S')
     plt.plot(metric.get_q_star_start(3), label='E')
     plt.legend(loc="upper right")
-    plt.ylabel('Q (N, W, S, E)')
+    plt.ylabel('Q (W, E)')
     plt.show()
     
     # eta = eta+5
 
-    # failure_prob, v_star_start_TD = Simulate_Semigradient_TD(env, 
-    #     pi_star,
-    #     num_episode_simulated,
-    #     X_state,
-    #     gamma,
-    #     alpha)
-
-    # plt.plot(v_star_start_TD)
-    # plt.ylabel('V star start TD')
-    # plt.show()
+    failure_prob, v_star_start_TD = Simulate_Semigradient_TD(env, 
+        pi_star,
+        num_episode_simulated,
+        X_state,
+        gamma,
+        alpha)
+    
+    plt.figure(3)
+    plt.plot(v_star_start_TD)
+    plt.ylabel('V star start TD')
+    plt.show()
 
 #     failure_prob_with_eta[eta] = failure_prob
 

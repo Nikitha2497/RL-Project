@@ -17,7 +17,6 @@ def Sarsa(
 ) -> Tuple[np.array, Policy, Metric]:
     
     metric = Metric(num_episode)
-    
     w = np.zeros((X.feature_vector_len()))
     
     def epsilon_greedy_policy(s,w,epsilon=.0):
@@ -43,6 +42,7 @@ def Sarsa(
             epsilon = 1/(itr+1)
             alpha = 1/(itr+1)
             itr += 1
+            print(i/(num_episode/100))
 # #             print(alpha)
             
         while True:
@@ -72,9 +72,9 @@ def Sarsa(
         Q_start = [np.dot(w, X(env.reset(), a)) for a in range(env.nA)]
         
         metric.set_v_star_start(i, np.max(Q_start))
-        metric.set_q_star_start(0, i, Q_start[0])
+#         metric.set_q_star_start(0, i, Q_start[0])
         metric.set_q_star_start(1, i, Q_start[1])
-        metric.set_q_star_start(2, i, Q_start[2])
+#         metric.set_q_star_start(2, i, Q_start[2])
         metric.set_q_star_start(3, i, Q_start[3])
         
 #             metric.set_a_star_start(i,np.argmax(Q_start))
@@ -82,7 +82,6 @@ def Sarsa(
     pi_star = GreedyPolicy(env.nA, w, X)
     
     state = env.reset()
-    
     while True:
         action = pi_star.action(state)
         new_state, reward, done, goal = env.step(action, False)
