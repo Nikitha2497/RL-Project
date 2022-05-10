@@ -25,7 +25,6 @@ def Simulate_Semigradient_TD(env: Env,
 		if (i%(num_episode/100)==0):
 			alpha = 1./(itr+1)
 			itr += 1
-			print(i/(num_episode/100))
 		while True:
 			action = policy.action(state)
 			x = X(state) #features
