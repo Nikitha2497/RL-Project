@@ -7,6 +7,7 @@ import matplotlib.pylab as plt
 
 from typing import Tuple
 
+#Implementation of modified TD(0) and MC for risk estimation of the policy(probability failure prediction)
 def Simulate_MC(env: Env, policy: Policy, max_num_steps:int) -> int:
 	steps = 0
 	state = env.reset()

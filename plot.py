@@ -9,6 +9,8 @@ import pandas as pd
 
 import seaborn as sns
 
+#Util class to plot different types of plots
+
 #Use tex for labelling the plots
 plt.rcParams['text.usetex'] = True
 
@@ -18,10 +20,12 @@ fontsize_ticks = 10
 
 sns.set(font_scale = fontscale)
 
+#Saves a plot figure in both .png and .svg format
 def save_figure(filename):
 	plt.savefig(filename + '.png')
 	plt.savefig(filename + '.svg')
 
+#Plots an array with 1 std dev.
 def plot_CI(values:np.array,
 	xlabel,
 	ylabel,
@@ -55,6 +59,7 @@ def plot_CI(values:np.array,
 	save_figure(filename)
 	plt.clf()
 
+#Plots two arrays with 1 std dev.
 def compare_plot_CI(values1: np.array,
 	label1,
 	values2:np.array,
@@ -114,7 +119,7 @@ def compare_plot_CI(values1: np.array,
 	plt.clf()
 
 
-
+#Plots two arrays with 1 std dev using seaborn
 def compare_plot_CI_seaborn(values1: np.array,
 	label1,
 	values2:np.array,

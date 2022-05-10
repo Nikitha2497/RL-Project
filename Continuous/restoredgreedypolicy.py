@@ -3,6 +3,7 @@ import numpy as np
 from policy import Policy
 from features import StateActionFeatureVector
 
+#An implementation of the Greedy policy which can restore the data from a file(with weights vector)
 class RestoredGreedyPolicy(Policy):
 	def __init__(self, nA: int, X:StateActionFeatureVector):
 		self.nA = nA

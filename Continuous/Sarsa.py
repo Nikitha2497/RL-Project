@@ -5,6 +5,7 @@ from features import StateActionFeatureVector
 from typing import Tuple
 from metric import Metric
 
+#Implements the modified semi gradient sarsa algorithm
 def Sarsa(
    env,  
     gamma:float, # discount factor
@@ -42,27 +43,26 @@ def Sarsa(
             epsilon = 1/(itr+1)
             alpha = 1/(itr+1)
             itr += 1
-            # print(i/(num_episode/100))
-# #             print(alpha)
-            
+        
         while True:
-            x = X(state, action) #feauter vector
+            x = X(state, action) #feature vector
             
             q_hat = np.dot(w, x) #approximate state action value function
             
             new_state, reward, done, goal = env.step(action)
 #             print("action", action, "state", new_state)
             
+            #Goal state
             if done and goal:
                 w = w + alpha*(reward + goal_reward - q_hat)*x
                 break
+            #Unsafe state
             elif done:
                 w = w + alpha*(reward - eta - q_hat)*x
                 break
+            #Safe state
             else:
                 new_action = epsilon_greedy_policy(new_state, w, epsilon)
-#                 Q = [np.dot(w, X(new_state, a)) for a in range(env.nA)]
-#                 new_action = np.argmax(Q)
     
                 new_x = X(new_state, new_action)
                 new_q_hat = np.dot(w, new_x)
@@ -84,6 +84,7 @@ def Sarsa(
 
     pi_star = GreedyPolicy(env.nA, w, X)
     
+    #Prints the trajectory for the pi_star policy
     # state = env.reset()
     # while True:
     #     action = pi_star.action(state)
@@ -113,7 +114,6 @@ class GreedyPolicy(Policy):
 
     def action(self,state):
         Q = [np.dot(self.w, self.X(state,a)) for a in range(self.nA)]
-        # print("THIS STATE " , state, Q, np.argmax(Q))
         return np.argmax(Q)
 
     def save_tofile(self, filename):

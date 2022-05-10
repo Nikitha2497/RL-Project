@@ -1,7 +1,7 @@
 import numpy as np
 from env import Env
 
-
+#This is discrete space and discrete action space env
 class DiscreteEnv(Env): # MDP introduced at Fig 5.4 in Sutton Book
 
     def __init__(self,lambda1, lambda2, 

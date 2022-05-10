@@ -24,6 +24,7 @@ from plot import compare_plot_CI
 from plot import plot_CI
 from plot import compare_plot_CI_seaborn
 
+#Run file for the control algorithm
 
 #region env
 lambda1 = 1#control cost

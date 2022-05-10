@@ -10,6 +10,7 @@ from restoredgreedypolicy import RestoredGreedyPolicy
 
 from typing import Tuple
 
+#Plots the grid world, policy plot, no noise trajectory and sample trajectories. 
 plt.rcParams['text.usetex'] = True
 
 #region env
@@ -53,6 +54,7 @@ for i in range(0, m):
 
 fontsize = 14
 
+#Plots a single trajectory
 def plot_line(pi_star, allow_noise=False) -> Tuple[list, list]:
 	x = []
 	y = []
@@ -76,6 +78,7 @@ def plot_line(pi_star, allow_noise=False) -> Tuple[list, list]:
 
 	return y,x
 
+#Sets the grid world
 def setup_grid():
 	fig, ax = plt.subplots()
 
@@ -95,6 +98,7 @@ def save_figure(filename):
 	plt.savefig(filename + '.png')
 	plt.savefig(filename + '.svg')
 
+#Plots the policy
 def plot_policy(eta):
 	fig, ax = setup_grid()
 	pi_star = RestoredGreedyPolicy(states)
@@ -122,8 +126,6 @@ def plot_policy(eta):
 
 	save_figure("results/policy_" + str(eta))
 	plt.clf()
-
-
 
 
 
@@ -160,7 +162,7 @@ plot_policy(15)
 plot_policy(50)
 
 
-#Sample trajectories plot
+#Sample trajectories plot for num_simulations
 # fig, ax = setup_grid()
 # num_simulations = 100000
 

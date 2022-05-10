@@ -29,6 +29,8 @@ from plot import compare_plot_CI
 from plot import compare_plot_CI_seaborn
 
 
+#This is the run file for the control algorithm
+
 #region env
 #There is no state cost here
 gamma = 1
@@ -126,12 +128,13 @@ def run_control(eta):
 
 	ci = "sd"    
 
+	# plot for confidence interval with 1 standard deviation using seaborne library
 	compare_plot_CI_seaborn(final_q_star_W_episodes, 'Q(I, W)' ,
 		final_q_star_E_episodes, 'Q(I, E)', 
 		r'\textbf{Epsiodes}', r'\textbf{Q (I , $\bullet$)}', 
 		'results/q_line_ ' + str(ci) + '_ci' +str(eta) , ci)
 	
-
+	#Custom plot for confidence interval with 1 standard deviation
 	# compare_plot_CI(final_q_star_W_episodes, 'Q(I, W)' ,
 	#     final_q_star_E_episodes, 'Q(I, E)', 
 	#     r'\textbf{Epsiodes}', r'\textbf{Q (I , $\bullet$)}', 

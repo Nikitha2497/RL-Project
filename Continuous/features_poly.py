@@ -9,10 +9,6 @@ import numpy as np
 class StateActionFeatureVectorWithPoly(StateActionFeatureVector):
     def __init__(self,
                  num_actions:int):
-        """
-        num_actions: the number of possible actions
-        """
-        
         self.num_actions = num_actions
         self.num_dimesions_per_action = 4
         # self.num_dimesions_per_action = 3
@@ -26,10 +22,6 @@ class StateActionFeatureVectorWithPoly(StateActionFeatureVector):
 
    
     def __call__(self, s, a) -> np.array:
-    
-        """
-        implement function x: S x A -> R
-        """
         ret_array = np.zeros(self.dimension)
 
         offset = a*self.num_dimesions_per_action
@@ -52,10 +44,6 @@ class StateFeatureVectorWithPoly(StateFeatureVector):
         return self.dimension
 
     def __call__(self, s) -> np.array:
-    
-        """
-        implement function x: S -> R
-        """
         ret_array = np.zeros(self.dimension)
 
         ret_array[0] = 1

@@ -23,6 +23,7 @@ from features_tilecoding import StateFeatureVectorWithTile
 from features_tilecoding import StateActionFeatureVectorWithTile
 from restoredgreedypolicy import RestoredGreedyPolicy
 
+#This is the run file for P_fail prediction algorithm
 
 #Use tex for labelling the plots
 plt.rcParams['text.usetex'] = True

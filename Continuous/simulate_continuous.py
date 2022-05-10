@@ -6,6 +6,7 @@ from features import StateFeatureVector
 
 from typing import Tuple
 
+#Implementation of modified semi gradient TD for risk estimation of the policy(probability failure prediction)
 def Simulate_Semigradient_TD(env: Env,
 	policy: Policy,
 	num_episode: int,
@@ -26,13 +27,10 @@ def Simulate_Semigradient_TD(env: Env,
 			itr += 1
 			print(i/(num_episode/100))
 		while True:
-			# print("I am here")
 			action = policy.action(state)
-			# print("current state ", state, action)
 			x = X(state) #features
 			
 			new_state, reward, done, goal = env.step(action)
-			# print("new state", new_state, reward, done, goal)
 			
 			new_x = X(new_state)
 
@@ -40,10 +38,13 @@ def Simulate_Semigradient_TD(env: Env,
 
 			new_val = np.dot(w, new_x)
 
+			#goal state
 			if done and goal:
 				delta =  - val
+			#unsafe state
 			elif done:
 				delta = 1 - val
+			#safe state
 			else:
 				delta = gamma*new_val - val
 
@@ -57,10 +58,6 @@ def Simulate_Semigradient_TD(env: Env,
 
 		v_star_start[i] = np.dot(w, X(env.reset()))
 
-
-	print("inside simulate")
-	print(w)
-	print(X(env.reset()))
 	v_start_state = np.dot(w, X(env.reset()))
 
 	return v_start_state, v_star_start

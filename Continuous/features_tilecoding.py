@@ -6,6 +6,7 @@ import numpy as np
 import math
 
 
+#Implements the stata action feature vector with tile coding
 #We have used the same implementation we used in the assignment 4
 class StateActionFeatureVectorWithTile(StateActionFeatureVector):
     def __init__(self,
@@ -52,20 +53,14 @@ class StateActionFeatureVectorWithTile(StateActionFeatureVector):
 
 
     def feature_vector_len(self) -> int:
-        """
-        return dimension of feature_vector: d = num_actions * num_tilings * num_tiles
-        """
         return self.dimension
 
    
+
     def __call__(self, s, a) -> np.array:
-    
-        """
-        implement function x: S+ x A -> [0,1]^d
-        if done is True, then return 0^d
-        """
         ret_array = np.zeros(self.dimension)
 
+        #Terminal state condition is not added here because it is never called.
         shape = []
         shape.append(self.num_actions)
         shape.append(self.num_tilings)
@@ -90,7 +85,6 @@ class StateActionFeatureVectorWithTile(StateActionFeatureVector):
             ret_nd_array[tuple(state_rep)] = 1
 
         ret_array = ret_nd_array.flatten()
-        # print(len(ret_array))
         return ret_array
 
 
@@ -138,7 +132,7 @@ class StateFeatureVectorWithTile(StateFeatureVector):
 
 
     def __call__(self,s):
-
+        #Terminal state condition is not added here because it is never called.
         ret_array = np.zeros(self.dimension)
 
         shape = []

@@ -23,6 +23,8 @@ from policy import Policy
 from restoredgreedypolicy import RestoredGreedyPolicy
 
 
+#run file for the P_fail prediction algorithm
+
 #Use tex for labelling the plots
 plt.rcParams['text.usetex'] = True
 

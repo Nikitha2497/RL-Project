@@ -16,6 +16,8 @@ from typing import Tuple
 from features_tilecoding import StateFeatureVectorWithTile
 from features_tilecoding import StateActionFeatureVectorWithTile
 
+
+#Plots the continuous domain, no noise trajectories and sample trajectories for the continuous state space
 plt.rcParams['text.usetex'] = True
 fontsize = 16
 
@@ -79,9 +81,8 @@ ticksize = 0.1
 max_allowed_steps = 100
 
 
+#Plotting the continuous domain
 def setup_domain():
-
-	#Plotting the domain
 	fig, ax = plt.subplots()
 
 	ax.set_xticks(np.arange(boundary.get_x1() - ticksize, boundary.get_x2() + ticksize, ticksize))
@@ -131,8 +132,6 @@ def save_figure(filename):
 	plt.savefig(filename + '.png')
 	plt.savefig(filename + '.svg')
 
-# ax.invert_yaxis()
-# plt.grid(b=True,which='both')
 #setup domain
 setup_domain()
 plt.savefig('results/domain.png')
@@ -141,6 +140,7 @@ plt.grid(b=True,which='both')
 plt.savefig('results/domain_withgrid.png')
 plt.clf()
 
+#Plots a single trajectory
 def plot_line(pi_star, allow_noise=False) -> Tuple[list, list]:
 	x = []
 	y = []
@@ -173,7 +173,7 @@ def plot_line(pi_star, allow_noise=False) -> Tuple[list, list]:
 	return x,y,False
 
 
-#Draw the no-noise trajectory
+#Plot the no-noise trajectory
 setup_domain()
 pi_star = RestoredGreedyPolicy(nA, X_state_action)
 pi_star.restore_fromfile('data/pi_star_' + str(eta1) + ".txt")
@@ -195,8 +195,7 @@ save_figure('results/no_traj_' + str(eta1) + '_' + str(eta2))
 plt.clf()
 
 
-#Draw with noise trajectory
-
+#Plot with noise trajectories for num_simulations
 num_simulations = 100
 setup_domain()
 
@@ -226,7 +225,6 @@ plt.clf()
 
 #Draw with noise trajectory with different colors for colliding one and non-colliding
 setup_domain()
-
 pi_star1= RestoredGreedyPolicy(nA, X_state_action)
 pi_star1.restore_fromfile('data/pi_star_' + str(eta1) + ".txt")
 for simulation in range(0, num_simulations):

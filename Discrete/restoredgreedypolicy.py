@@ -1,6 +1,6 @@
 from policy import Policy
 
-
+#Implementation of Policy which restores from a file.
 class RestoredGreedyPolicy(Policy):
 	def __init__(self, states:int):
 		self.state_action_dict = {};

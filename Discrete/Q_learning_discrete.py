@@ -4,6 +4,7 @@ from typing import Tuple
 
 from metric import Metric
 
+#Implementation of modified Q-learning for discrete space
 def QLearning(
     env, 
     gamma:float, 
@@ -48,10 +49,7 @@ def QLearning(
             epsilon = 1./(itr)
             alpha = 1./(itr)
             itr += 1
-#             print("epsilon=", epsilon)
-#             print("alpha=", alpha)
-#             print("i=", i)
-        
+            
         while True:
             time_steps += 1
             action = epsilon_greedy_policy(state, epsilon)

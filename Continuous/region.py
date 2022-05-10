@@ -1,5 +1,4 @@
 
-
 #This represents a rectangular region
 class Rectangle():
 	#requires left bottom point and right top point
