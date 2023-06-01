@@ -2,6 +2,8 @@
 RL Course Project - Chance Constraint Motion Planning
 Authors - Apurva Patil, Nikitha Gollamudi
 
+Project Report can be found here - https://drive.google.com/file/d/1xgmGm90Z1sQqancLlEOnP4WR7w2N4hHD/view?usp=sharing
+
 Required python modules - numpy, seaborn, typing, matlabplot, pandas
 
 The folder structure of the code base is as follows - 
